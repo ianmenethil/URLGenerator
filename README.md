@@ -13,7 +13,7 @@ This is a simple HTML tool designed to generate pre-filled setup URLs for the Ze
 
 ## How to Use
 
-1.  Open the [`URLGenerator.html`](f:/_Zenith_Github/URLGenerator/URLGenerator.html) file in your web browser.
+1.  Open the [`URLGenerator.html`](URLGenerator.html) file in your web browser.
 2.  Fill out the form sections:
     -   Personal Details
     -   Contact Details
@@ -24,6 +24,6 @@ This is a simple HTML tool designed to generate pre-filled setup URLs for the Ze
 
 ## Technical Details
 
--   The entire tool is contained within a single HTML file ([`URLGenerator.html`](f:/_Zenith_Github/URLGenerator/URLGenerator.html)).
+-   The entire tool is contained within a single HTML file ([`URLGenerator.html`](URLGenerator.html)).
 -   Styling is done using embedded CSS within the `<style>` tags.
 -   Functionality (calculations, URL generation, DOM manipulation) is handled by embedded JavaScript within the `<script>` tags.
