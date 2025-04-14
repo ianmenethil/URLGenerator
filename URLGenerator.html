@@ -123,6 +123,7 @@
     .url-container {
       position: relative;
       margin: 10px 0;
+      margin-bottom: 16px;
     }
 
     .url-tooltip {
@@ -131,6 +132,7 @@
       left: 0;
       width: 100%;
       background-color: #333;
+      pointer-events: none;
       color: white;
       padding: 8px;
       border-radius: 4px;
@@ -211,12 +213,6 @@
       <div class="section full-width">
         <h2 class="section-title"><i class="icon">👤</i> Personal Details</h2>
         <div class="section-grid">
-          <!-- Customer Reference -->
-          <div class="field-container">
-            <input type="text" id="customerReference" name="CustomerReference" placeholder=" " required>
-            <label for="customerReference">Customer Reference</label>
-          </div>
-
           <!-- First Name -->
           <div class="field-container">
             <input type="text" id="firstName" name="FirstName" placeholder=" " required>
@@ -228,7 +224,11 @@
             <input type="text" id="lastName" name="LastName" placeholder=" " required>
             <label for="lastName">Last Name</label>
           </div>
-
+          <!-- Customer Reference -->
+          <div class="field-container">
+            <input type="text" id="customerReference" name="CustomerReference" placeholder=" " required>
+            <label for="customerReference">Customer Reference</label>
+          </div>
           <!-- Company Name -->
           <div class="field-container">
             <input type="text" id="companyName" name="CompanyName" placeholder=" ">
@@ -243,14 +243,14 @@
         <div class="section-grid">
           <!-- Contact Details -->
           <div class="field-container">
-            <input type="text" id="contactDetails" name="ContactDetails" placeholder=" ">
-            <label for="contactDetails">Contact Details</label>
+            <input type="text" id="address1" name="Address1" placeholder=" " required>
+            <label for="address1">Address 1</label>
           </div>
 
-          <!-- Address 1 -->
+          <!-- Address 2 -->
           <div class="field-container">
-            <input type="text" id="address1" name="Address1" placeholder=" " required>
-            <label for="address1">Address</label>
+            <input type="text" id="address2" name="Address2" placeholder=" " required>
+            <label for="address2">Address 2</label>
           </div>
 
           <!-- Suburb -->
@@ -261,9 +261,22 @@
 
           <!-- State -->
           <div class="field-container">
-            <input type="text" id="state" name="State" placeholder=" " required>
+            <select id="state" name="State" required>
+              <option value="" disabled selected hidden> </option>
+              <!-- Added hidden attribute for better placeholder behavior -->
+              <option value="NSW">NSW</option>
+              <option value="VIC">VIC</option>
+              <option value="QLD">QLD</option>
+              <option value="ACT">ACT</option>
+              <option value="NT">NT</option>
+              <option value="SA">SA</option>
+              <option value="WA">WA</option>
+              <option value="TAS">TAS</option>
+              <option value="NZ">NZ</option>
+            </select>
             <label for="state">State</label>
           </div>
+
 
           <!-- Postcode -->
           <div class="field-container">
@@ -273,7 +286,7 @@
 
           <!-- Country -->
           <div class="field-container">
-            <input type="text" id="country" name="Country" placeholder=" " required>
+            <input type="text" id="country" name="Country" placeholder=" " required value="Australia">
             <label for="country">Country</label>
           </div>
 
@@ -295,16 +308,13 @@
       <div class="section full-width">
         <h2 class="section-title"><i class="icon">💳</i> Payment Details</h2>
         <div class="section-grid">
-          <!-- Payment Amount -->
+          <!-- Payment Frequency -->
           <div class="field-container">
-            <input type="number" id="paymentAmount" name="PaymentAmount" placeholder=" " step="0.01" min="0" required>
-            <label for="paymentAmount">Payment Amount</label>
-          </div>
-
-          <!-- Number of Installments -->
-          <div class="field-container">
-            <input type="number" id="numberOfInstallments" name="NumberOfInstallments" placeholder=" " min="1" required>
-            <label for="numberOfInstallments">Number of Installments</label>
+            <select id="paymentFrequency" name="PaymentFrequency" required>
+              <option value="Monthly" selected>Monthly</option>
+              <option value="Weekly">Weekly</option>
+            </select>
+            <label for="paymentFrequency">Payment Frequency</label>
           </div>
 
           <!-- Payment Option -->
@@ -315,25 +325,34 @@
             <label for="paymentOption">Payment Option</label>
           </div>
 
-          <!-- Payment Frequency -->
+          <!-- Total Amount (renamed from Payment Amount) -->
           <div class="field-container">
-            <select id="paymentFrequency" name="PaymentFrequency" required>
-              <option value="Monthly" selected>Monthly</option>
-              <option value="Weekly">Weekly</option>
-            </select>
-            <label for="paymentFrequency">Payment Frequency</label>
+            <input type="number" id="totalAmount" name="TotalAmount" placeholder=" " step="0.01" min="0" required>
+            <label for="totalAmount">Total Amount Due</label>
+          </div>
+
+          <!-- Number of Installments -->
+          <div class="field-container">
+            <input type="number" id="numberOfInstallments" name="NumberOfInstallments" placeholder=" " min="1" required>
+            <label for="numberOfInstallments">Number of Installments</label>
           </div>
 
           <!-- Payment Start Date -->
           <div class="field-container">
             <input type="date" id="paymentStartDate" name="PaymentStartDate" placeholder=" " required>
-            <label for="paymentStartDate">Start Date</label>
+            <label for="paymentStartDate">Payment Start Date</label>
           </div>
 
           <!-- Payment End Date (Disabled) -->
           <div class="field-container">
             <input type="text" id="paymentEndDate" name="PaymentEndDate" placeholder=" " disabled>
-            <label for="paymentEndDate">End Date</label>
+            <label for="paymentEndDate">Payment End Date</label>
+          </div>
+
+          <!-- Each Installment Amount (new field - read-only) - full width -->
+          <div class="field-container full-width">
+            <input type="text" id="installmentAmount" name="InstallmentAmount" placeholder=" " disabled>
+            <label for="installmentAmount">Each Installment Amount</label>
           </div>
         </div>
       </div>
@@ -367,7 +386,7 @@
       return `${day}-${month}-${year}`;
     }
 
-    // Format date for display (11-April-2025 format)
+    // Format date for display (14-April-2025 format)
     function formatDisplayDate(date) {
       const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
       const day = date.getDate().toString().padStart(2, '0');
@@ -379,6 +398,13 @@
     // Format a number with 2 decimal places
     function formatAmount(amount) {
       return parseFloat(amount).toFixed(2);
+    }
+
+    // Calculate installment amount
+    function calculateInstallmentAmount(totalAmount, installments) {
+      if (!totalAmount || !installments || installments < 1) return '';
+      const amount = parseFloat(totalAmount) / parseInt(installments);
+      return formatAmount(amount);
     }
 
     // Calculate end date based on frequency, start date, and installments
@@ -398,10 +424,11 @@
         return 'Unsupported Frequency';
       }
 
+      // Add 1 day to the end date
+      end.setDate(end.getDate() + 1);
+
       return formatDisplayDate(end);
     }
-
-    // Generate URL
     function generateURL() {
       const form = document.getElementById('paymentForm');
       const formData = new FormData(form);
@@ -409,34 +436,43 @@
       let url = 'https://pay.zenpay.com.au/setup/zenith123?';
       const params = [];
 
-      // Add all form fields to the URL
       formData.forEach((value, key) => {
+        // Skip these keys entirely
+        if (key === 'TotalAmount' || key === 'NumberOfInstallments' || key === 'InstallmentAmount') {
+          return;
+        }
+
         if (key === 'PaymentStartDate') {
-          // Format date
           const dateValue = formatDisplayDate(new Date(value));
           params.push(`${key}=${encodeURIComponent(dateValue)}`);
-        } else if (key === 'PaymentAmount') {
-          // Format amount
-          params.push(`${key}=${encodeURIComponent(formatAmount(value))}`);
+        } else if (key === 'PaymentFrequency') {
+          params.push(`${key}=${encodeURIComponent('Permission_PaymentFrequency_' + value)}`);
         } else {
           params.push(`${key}=${encodeURIComponent(value)}`);
         }
       });
 
-      // Add payment end date
+      // Add payment end date as-is
       const endDateValue = document.getElementById('paymentEndDate').value;
       if (endDateValue) {
         params.push(`PaymentEndDate=${encodeURIComponent(endDateValue)}`);
       }
 
+      // Rename InstallmentAmount to PaymentAmount
+      const installmentAmountValue = document.getElementById('installmentAmount').value;
+      if (installmentAmountValue) {
+        params.push(`PaymentAmount=${encodeURIComponent(installmentAmountValue)}`);
+      }
+
       return url + params.join('&');
     }
+
 
     // Truncate URL for display
     function truncateUrl(url) {
       if (!url) return '';
-      if (url.length <= 60) return url;
-      return url.substring(0, 57) + '...';
+      if (url.length <= 100) return url;
+      return url.substring(0, 97) + '...';
     }
 
     // Update calculated fields
@@ -444,11 +480,25 @@
       const frequency = document.getElementById('paymentFrequency').value;
       const installments = document.getElementById('numberOfInstallments').value;
       const startDate = document.getElementById('paymentStartDate').value;
+      const totalAmount = document.getElementById('totalAmount').value;
+
+      // Calculate installment amount
+      if (totalAmount && installments) {
+        const installmentAmt = calculateInstallmentAmount(totalAmount, installments);
+        document.getElementById('installmentAmount').value = installmentAmt;
+      }
 
       // Calculate payment end date if all required fields are filled
       if (frequency && installments && startDate) {
         const endDate = calculateEndDate(frequency, startDate, installments);
         document.getElementById('paymentEndDate').value = endDate;
+
+        // Show formatted start date in UI when date is changed
+        if (startDate) {
+          const startDateObj = new Date(startDate);
+          const formattedStartDate = formatDisplayDate(startDateObj);
+          document.getElementById('paymentStartDate').setAttribute('title', formattedStartDate);
+        }
 
         // Generate URL once end date is calculated
         const fullUrl = generateURL();
@@ -468,7 +518,7 @@
 
     // Handle payment amount formatting on blur (not during typing)
     function handleAmountBlur() {
-      const amountField = document.getElementById('paymentAmount');
+      const amountField = document.getElementById('totalAmount');
       if (amountField.value) {
         amountField.value = formatAmount(amountField.value);
       }
@@ -491,9 +541,13 @@
       const formattedDate = today.toISOString().substr(0, 10); // YYYY-MM-DD format for the date input
       document.getElementById('paymentStartDate').value = formattedDate;
 
+      // Display the formatted start date in the tooltip
+      const formattedDisplayDate = formatDisplayDate(today);
+      document.getElementById('paymentStartDate').setAttribute('title', formattedDisplayDate);
+
       // Set up event listeners
       const form = document.getElementById('paymentForm');
-      const inputs = form.querySelectorAll('input:not([disabled]):not(#paymentAmount), select');
+      const inputs = form.querySelectorAll('input:not([disabled]):not(#totalAmount), select');
 
       inputs.forEach(input => {
         input.addEventListener('change', updateCalculations);
@@ -501,7 +555,7 @@
       });
 
       // Special handling for payment amount to allow typing full values
-      const amountField = document.getElementById('paymentAmount');
+      const amountField = document.getElementById('totalAmount');
       amountField.addEventListener('change', updateCalculations);
       amountField.addEventListener('blur', handleAmountBlur);
 
