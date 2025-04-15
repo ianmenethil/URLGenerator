@@ -203,6 +203,34 @@
         flex-direction: column;
       }
     }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .download-btn {
+      background-color: #4a90e2;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 5px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      transition: background-color 0.2s;
+    }
+
+    .download-btn:hover {
+      background-color: #3a7cc0;
+    }
+
+    .download-btn .icon {
+      margin-right: 5px;
+    }
   </style>
 </head>
 
@@ -211,7 +239,12 @@
     <form id="paymentForm" class="form-grid">
       <!-- Personal Details Section -->
       <div class="section full-width">
-        <h2 class="section-title"><i class="icon">👤</i> Personal Details</h2>
+        <div class="section-header">
+          <h2 class="section-title"><i class="icon">👤</i> Personal Details</h2>
+          <button type="button" id="downloadBtn" class="download-btn" title="Download this form">
+            <i class="icon">⬇️</i> Download
+          </button>
+        </div>
         <div class="section-grid">
           <!-- First Name -->
           <div class="field-container">
@@ -533,8 +566,46 @@
         window.open(fullUrl, '_blank');
       }
     }
+    function downloadHtmlFile() {
+      // Clone the document to avoid modifying the current page
+      const documentClone = document.documentElement.cloneNode(true);
 
-    // Initialize the form
+      // Find and remove the download button from the clone
+      const downloadBtnToRemove = documentClone.querySelector('#downloadBtn');
+      if (downloadBtnToRemove) {
+        downloadBtnToRemove.parentNode.removeChild(downloadBtnToRemove);
+      }
+
+      // If we used a section-header div that's now empty, fix the structure
+      const sectionHeader = documentClone.querySelector('.section-header');
+      if (sectionHeader) {
+        const sectionTitle = sectionHeader.querySelector('.section-title');
+        if (sectionTitle && sectionHeader.parentNode) {
+          // Move the title directly under the section and remove the header wrapper
+          sectionHeader.parentNode.insertBefore(sectionTitle, sectionHeader);
+          sectionHeader.parentNode.removeChild(sectionHeader);
+        }
+      }
+
+      // Get the full HTML content from the modified clone
+      const htmlContent = '<!DOCTYPE html>\n' + documentClone.outerHTML;
+
+      // Create a blob with the HTML content
+      const blob = new Blob([htmlContent], { type: 'text/html' });
+
+      // Create a temporary link element
+      const downloadLink = document.createElement('a');
+      downloadLink.href = URL.createObjectURL(blob);
+      downloadLink.download = 'zenpay_payment_form.html';
+
+      // Append to the body, click, and remove
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+
+      // Clean up the URL object
+      URL.revokeObjectURL(downloadLink.href);
+    }
     document.addEventListener('DOMContentLoaded', function() {
       // Set default values for date fields
       const today = new Date();
@@ -571,6 +642,9 @@
         event.preventDefault();
         openUrl();
       });
+
+      // Set up download button
+      document.getElementById('downloadBtn').addEventListener('click', downloadHtmlFile);
 
       // Initial calculation to set end date
       updateCalculations();
