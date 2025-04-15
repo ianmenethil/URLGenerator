@@ -596,7 +596,7 @@
       // Create a temporary link element
       const downloadLink = document.createElement('a');
       downloadLink.href = URL.createObjectURL(blob);
-      downloadLink.download = 'zenpay_payment_form.html';
+      downloadLink.download = 'ZenPayURLGenerator.html';
 
       // Append to the body, click, and remove
       document.body.appendChild(downloadLink);
@@ -629,10 +629,6 @@
       const amountField = document.getElementById('totalAmount');
       amountField.addEventListener('change', updateCalculations);
       amountField.addEventListener('blur', handleAmountBlur);
-
-      /* Test Data Button event listener - Commented out
-      document.getElementById('testDataBtn').addEventListener('click', fillTestData);
-      */
 
       // Set up open URL button
       document.getElementById('openUrlBtn').addEventListener('click', openUrl);
