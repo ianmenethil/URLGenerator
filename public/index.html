@@ -297,7 +297,7 @@
                     </div>
                 </div>
 
-                <div class="section-grid" style="grid-template-columns: repeat(2, 1fr); margin-top: 10px">
+                <div class="section-grid" style="grid-template-columns: repeat(3, 1fr); margin-top: 10px">
                     <div class="field-container">
                         <input type="email" id="email" name="Email" placeholder=" " required
                             pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
@@ -311,7 +311,7 @@
                         <label for="mobile">Mobile</label>
                     </div>
 
-                    <div class="field-container" style="display: none">
+                    <div class="field-container">
                         <input type="text" id="companyName" name="CompanyName" placeholder=" " />
                         <label for="companyName">Company Name</label>
                     </div>
@@ -749,7 +749,7 @@
             params.push(`paymentMethod=${encodeURIComponent(paymentMethod)}`);
 
             formData.forEach((value, key) => {
-                if (key === 'TotalAmount' || key === 'NumberOfInstallments' || key === 'InstallmentAmount') {
+                if (key === 'TotalAmount' || key === 'NumberOfInstallments' || key === 'InstallmentAmount' || key === 'MerchantCode') {
                     return;
                 }
 
@@ -757,6 +757,8 @@
                     const dateValue = formatDisplayDate(new Date(value));
                     params.push(`${key}=${encodeURIComponent(dateValue)}`);
                 } else if (key === 'frequency') {
+                    params.push(`${key}=${encodeURIComponent(value)}`);
+                } else {
                     params.push(`${key}=${encodeURIComponent(value)}`);
                 }
             });
@@ -821,11 +823,9 @@
         }
 
         function openUrl() {
-            // Check for empty merchant code and set default if needed
             const merchantField = document.getElementById('merchantCode');
             if (!merchantField.value.trim()) {
                 merchantField.value = 'Zenith123';
-                // Need to recalculate the URL with the new merchant code
                 updateCalculations();
             }
 
@@ -838,14 +838,10 @@
         }
         function downloadHtmlFile() {
             const documentClone = document.documentElement.cloneNode(true);
-
-            // Remove the download button
             const downloadBtnToRemove = documentClone.querySelector('#downloadBtn');
             if (downloadBtnToRemove) {
                 downloadBtnToRemove.parentNode.removeChild(downloadBtnToRemove);
             }
-
-            // Fix the header structure after removing the download button
             const sectionHeader = documentClone.querySelector('.section-header');
             if (sectionHeader) {
                 const sectionTitle = sectionHeader.querySelector('.section-title');
@@ -855,17 +851,14 @@
                 }
             }
 
-            // Get the current merchant code value
             const currentMerchantCode = document.getElementById('merchantCode').value || 'Zenith123';
 
-            // Set merchant code in the downloaded version
             const merchantCodeInput = documentClone.querySelector('#merchantCode');
             if (merchantCodeInput) {
                 merchantCodeInput.value = currentMerchantCode;
                 merchantCodeInput.setAttribute('value', currentMerchantCode);
             }
 
-            // Remove any scripts we don't need in the downloaded version
             const scripts = documentClone.querySelectorAll('script');
             scripts.forEach(script => {
                 if (script.textContent.includes('KEY = \'merchantCode\'') ||
@@ -875,11 +868,8 @@
                     script.parentNode.removeChild(script);
                 }
             });
-
-            // Add a standalone script with all the essential functions
             const standaloneScript = document.createElement('script');
             standaloneScript.textContent = `
-        // Essential calculation functions
         function formatDate(date) {
             const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
             const day = date.getDate().toString().padStart(2, '0');
@@ -887,7 +877,6 @@
             const year = date.getFullYear();
             return \`\${day}-\${month}-\${year}\`;
         }
-
         function formatDisplayDate(date) {
             const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
             const day = date.getDate().toString().padStart(2, '0');
@@ -895,21 +884,17 @@
             const year = date.getFullYear();
             return \`\${day}-\${month}-\${year}\`;
         }
-
         function formatAmount(amount) {
             return parseFloat(amount).toFixed(2);
         }
-
         function calculateInstallmentAmount(totalAmount, installments) {
             if (!totalAmount || !installments || installments < 1) return '';
             const amount = parseFloat(totalAmount) / parseInt(installments);
             return formatAmount(amount);
         }
-
         function calculateEndDate(frequency, startDate, installments) {
             const start = new Date(startDate);
             let end;
-
             if (frequency === 'Monthly') {
                 end = new Date(start);
                 end.setMonth(end.getMonth() + (parseInt(installments) - 1));
@@ -919,148 +904,117 @@
             } else {
                 return 'Unsupported Frequency';
             }
-
             end.setDate(end.getDate() + 1);
             return formatDisplayDate(end);
         }
-
         function generateURL() {
             const form = document.getElementById('paymentForm');
             const formData = new FormData(form);
             const merchantCode = document.getElementById('merchantCode').value || 'Zenith123';
             let url = 'https://pay.zenpay.com.au/setup/' + merchantCode + '?';
             const params = [];
-
             const paymentMethod = document.getElementById('paymentMethod').value;
             params.push(\`paymentMethod=\${encodeURIComponent(paymentMethod)}\`);
-
             formData.forEach((value, key) => {
-                if (key === 'TotalAmount' || key === 'NumberOfInstallments' || key === 'InstallmentAmount') {
+                if (key === 'TotalAmount' || key === 'NumberOfInstallments' || key === 'InstallmentAmount' || key === 'MerchantCode') {
                     return;
                 }
-
                 if (key === 'PaymentStartDate') {
                     const dateValue = formatDisplayDate(new Date(value));
                     params.push(\`\${key}=\${encodeURIComponent(dateValue)}\`);
                 } else if (key === 'frequency') {
                     params.push(\`\${key}=\${encodeURIComponent(value)}\`);
+                } else {
+                    params.push(\`\${key}=\${encodeURIComponent(value)}\`);
                 }
             });
-
             const endDateValue = document.getElementById('paymentEndDate').value;
             if (endDateValue) {
                 params.push(\`PaymentEndDate=\${encodeURIComponent(endDateValue)}\`);
             }
-
             const installmentAmountValue = document.getElementById('installmentAmount').value;
             if (installmentAmountValue) {
                 params.push(\`PaymentAmount=\${encodeURIComponent(installmentAmountValue)}\`);
             }
-
             return url + params.join('&');
         }
-
         function truncateUrl(url) {
             if (!url) return '';
             if (url.length <= 100) return url;
             return url.substring(0, 97) + '...';
         }
-
         function updateCalculations() {
             const frequency = document.getElementById('frequency').value;
             const installments = document.getElementById('numberOfInstallments').value;
             const startDate = document.getElementById('paymentStartDate').value;
             const totalAmount = document.getElementById('totalAmount').value;
-
             if (totalAmount && installments) {
                 const installmentAmt = calculateInstallmentAmount(totalAmount, installments);
                 document.getElementById('installmentAmount').value = installmentAmt;
             }
-
             if (frequency && installments && startDate) {
                 const endDate = calculateEndDate(frequency, startDate, installments);
                 document.getElementById('paymentEndDate').value = endDate;
-
                 if (startDate) {
                     const startDateObj = new Date(startDate);
                     const formattedStartDate = formatDisplayDate(startDateObj);
                     document.getElementById('paymentStartDate').setAttribute('title', formattedStartDate);
                 }
-
                 const fullUrl = generateURL();
                 const urlField = document.getElementById('url');
                 const urlTooltip = document.getElementById('url-tooltip');
-
                 urlField.value = truncateUrl(fullUrl);
                 urlTooltip.textContent = fullUrl;
                 document.getElementById('openUrlBtn').disabled = !fullUrl;
             }
         }
-
         function handleAmountBlur() {
             const amountField = document.getElementById('totalAmount');
             if (amountField.value) {
                 amountField.value = formatAmount(amountField.value);
             }
         }
-
         function openUrl() {
             const merchantField = document.getElementById('merchantCode');
             if (!merchantField.value.trim()) {
                 merchantField.value = 'Zenith123';
                 updateCalculations();
             }
-
             const urlTooltip = document.getElementById('url-tooltip');
             const fullUrl = urlTooltip.textContent;
-
             if (fullUrl && fullUrl !== 'Full URL will appear here on hover') {
                 window.open(fullUrl, '_blank');
             }
         }
-
-        // Initialize the form when the page loads
         document.addEventListener('DOMContentLoaded', function() {
-            // Set today's date
             const today = new Date();
             const formattedDate = today.toISOString().substr(0, 10);
             document.getElementById('paymentStartDate').value = formattedDate;
-
             const formattedDisplayDate = formatDisplayDate(today);
             document.getElementById('paymentStartDate').setAttribute('title', formattedDisplayDate);
-
-            // Add event listeners to form fields
             const form = document.getElementById('paymentForm');
             const inputs = form.querySelectorAll('input:not([disabled]):not(#totalAmount), select');
-
             inputs.forEach(input => {
                 input.addEventListener('change', updateCalculations);
                 input.addEventListener('input', updateCalculations);
             });
-
             const amountField = document.getElementById('totalAmount');
             amountField.addEventListener('change', updateCalculations);
             amountField.addEventListener('blur', handleAmountBlur);
-
             const merchantField = document.getElementById('merchantCode');
             if (merchantField) {
                 merchantField.addEventListener('change', updateCalculations);
                 merchantField.addEventListener('input', updateCalculations);
             }
-
             document.getElementById('openUrlBtn').addEventListener('click', openUrl);
-
             form.addEventListener('submit', function(event) {
                 event.preventDefault();
                 openUrl();
             });
-
-            // Run calculations immediately
             updateCalculations();
         });
     `;
 
-            // Add the standalone script to the downloaded document
             documentClone.querySelector('body').appendChild(standaloneScript);
 
             const htmlContent = '<!DOCTYPE html>\n' + documentClone.outerHTML;

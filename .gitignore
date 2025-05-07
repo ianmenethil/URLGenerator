@@ -1,3 +1,4 @@
 # Local Netlify folder
 .netlify
 URLGenerator copy.html
+.v1.bak/index.html

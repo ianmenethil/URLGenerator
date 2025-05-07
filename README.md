@@ -6,7 +6,7 @@ This is a simple HTML tool designed to generate pre-filled setup URLs for the Ze
 
 -   Collects customer personal, contact, and payment details through a web form.
 -   Automatically calculates the installment amount based on the total amount and number of installments.
--   Automatically calculates the payment end date based on the start date, frequency (Monthly/Weekly), and number of installments.
+-   Automatically calculates the payment end date based on the start date, frequency (Monthly/Weekly), and number of installments.  
 -   Generates a ZenPay setup URL with the provided details encoded as query parameters.
 -   Displays a truncated version of the generated URL, with the full URL available on hover.
 -   Provides an "Open" button to launch the generated URL in a new browser tab.

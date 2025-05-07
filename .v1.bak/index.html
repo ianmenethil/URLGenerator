@@ -2,654 +2,656 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ZenPay Payment Form</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZenPay Payment Form</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      background-color: #f5f5f5;
-      padding: 10px;
-    }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f5f5f5;
+            padding: 10px;
+        }
 
-    .form-container {
-      width: 100%;
-      max-width: 650px;
-      background-color: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
+        .form-container {
+            width: 100%;
+            max-width: 650px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
 
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(1, 1fr);
-      gap: 10px;
-    }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 10px;
+        }
 
-    .section {
-      margin-bottom: 15px;
-      background-color: #fcfcfc;
-      border-radius: 6px;
-      padding: 10px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    }
+        .section {
+            margin-bottom: 15px;
+            background-color: #fcfcfc;
+            border-radius: 6px;
+            padding: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
 
-    .section-title {
-      font-size: 0.9rem;
-      color: #555;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      font-weight: 500;
-    }
+        .section-title {
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+        }
 
-    .icon {
-      margin-right: 8px;
-      font-style: normal;
-    }
+        .icon {
+            margin-right: 8px;
+            font-style: normal;
+        }
 
-    .section-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
+        .section-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
 
-    .full-width {
-      grid-column: 1 / -1;
-    }
+        .full-width {
+            grid-column: 1 / -1;
+        }
 
-    .field-container {
-      position: relative;
-      margin-bottom: 0;
-    }
+        .field-container {
+            position: relative;
+            margin-bottom: 0;
+        }
 
-    .field-container input,
-    .field-container select {
-      width: 100%;
-      padding: 8px 10px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      font-size: 14px;
-      transition: border-color 0.2s, box-shadow 0.2s;
-      background-color: white;
-    }
+        .field-container input,
+        .field-container select {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background-color: white;
+        }
 
-    .field-container input:focus,
-    .field-container select:focus {
-      outline: none;
-      border-color: #4a90e2;
-      box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.15);
-    }
+        .field-container input:focus,
+        .field-container select:focus {
+            outline: none;
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.15);
+        }
 
-    .field-container label {
-      position: absolute;
-      left: 10px;
-      top: 8px;
-      font-size: 14px;
-      color: #777;
-      pointer-events: none;
-      transition: all 0.2s ease;
-      background-color: transparent;
-    }
+        .field-container label {
+            position: absolute;
+            left: 10px;
+            top: 8px;
+            font-size: 14px;
+            color: #777;
+            pointer-events: none;
+            transition: all 0.2s ease;
+            background-color: transparent;
+        }
 
-    .field-container input:focus+label,
-    .field-container input:not(:placeholder-shown)+label,
-    .field-container select:focus+label,
-    .field-container select:not([value=""]):valid+label {
-      top: -8px;
-      left: 8px;
-      font-size: 11px;
-      color: #4a90e2;
-      background-color: white;
-      padding: 0 4px;
-    }
+        .field-container input:focus+label,
+        .field-container input:not(:placeholder-shown)+label,
+        .field-container select:focus+label,
+        .field-container select:not([value=""]):valid+label {
+            top: -8px;
+            left: 8px;
+            font-size: 11px;
+            color: #4a90e2;
+            background-color: white;
+            padding: 0 4px;
+        }
 
-    .field-container input:disabled {
-      background-color: #f8f8f8;
-      cursor: not-allowed;
-    }
+        .field-container input:disabled {
+            background-color: #f8f8f8;
+            cursor: not-allowed;
+        }
 
-    .url-container {
-      position: relative;
-      margin: 10px 0;
-      margin-bottom: 16px;
-    }
+        .url-container {
+            position: relative;
+            margin: 10px 0;
+            margin-bottom: 16px;
+        }
 
-    .url-tooltip {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      width: 100%;
-      background-color: #333;
-      pointer-events: none;
-      color: white;
-      padding: 8px;
-      border-radius: 4px;
-      margin-top: 4px;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.2s, visibility 0.2s;
-      z-index: 100;
-      font-size: 12px;
-      word-break: break-all;
-    }
+        .url-tooltip {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: #333;
+            pointer-events: none;
+            color: white;
+            padding: 8px;
+            border-radius: 4px;
+            margin-top: 4px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s, visibility 0.2s;
+            z-index: 100;
+            font-size: 12px;
+            word-break: break-all;
+        }
 
-    .url-container:hover .url-tooltip {
-      opacity: 1;
-      visibility: visible;
-    }
+        .url-container:hover .url-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
 
-    .buttons-container {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      margin-top: 10px;
-    }
+        .buttons-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 10px;
+        }
 
-    .open-btn,
-    .test-btn {
-      padding: 10px;
-      border: none;
-      border-radius: 4px;
-      font-size: 14px;
-      cursor: pointer;
-      transition: background-color 0.2s;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      font-weight: 500;
-      flex: 1;
-    }
+        .open-btn,
+        .test-btn {
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+            flex: 1;
+        }
 
-    .open-btn {
-      background-color: #4a90e2;
-      color: white;
-    }
+        .open-btn {
+            background-color: #4a90e2;
+            color: white;
+        }
 
-    .test-btn {
-      background-color: #f0f0f0;
-      color: #555;
-    }
+        .test-btn {
+            background-color: #f0f0f0;
+            color: #555;
+        }
 
-    .open-btn:hover {
-      background-color: #3a7cc0;
-    }
+        .open-btn:hover {
+            background-color: #3a7cc0;
+        }
 
-    .test-btn:hover {
-      background-color: #e0e0e0;
-    }
+        .test-btn:hover {
+            background-color: #e0e0e0;
+        }
 
-    .open-btn:disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
-    }
+        .open-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
 
-    @media (max-width: 600px) {
-      .section-grid {
-        grid-template-columns: 1fr;
-      }
+        @media (max-width: 600px) {
+            .section-grid {
+                grid-template-columns: 1fr;
+            }
 
-      .buttons-container {
-        flex-direction: column;
-      }
-    }
+            .buttons-container {
+                flex-direction: column;
+            }
+        }
 
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
 
-    .download-btn {
-      background-color: #4a90e2;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      padding: 5px 10px;
-      font-size: 12px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      transition: background-color 0.2s;
-    }
+        .download-btn {
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
 
-    .download-btn:hover {
-      background-color: #3a7cc0;
-    }
+        .download-btn:hover {
+            background-color: #3a7cc0;
+        }
 
-    .download-btn .icon {
-      margin-right: 5px;
-    }
-  </style>
+        .download-btn .icon {
+            margin-right: 5px;
+        }
+    </style>
 </head>
 
 <body>
-  <div class="form-container">
-    <form id="paymentForm" class="form-grid">
-      <!-- Personal Details Section -->
-      <div class="section full-width">
-        <div class="section-header">
-          <h2 class="section-title"><i class="icon">👤</i> Personal Details</h2>
-          <button type="button" id="downloadBtn" class="download-btn" title="Download this form">
-            <i class="icon">⬇️</i> Download
-          </button>
-        </div>
-        <div class="section-grid">
-          <!-- First Name -->
-          <div class="field-container">
-            <input type="text" id="firstName" name="FirstName" placeholder=" " required>
-            <label for="firstName">First Name</label>
-          </div>
+    <div class="form-container">
+        <form id="paymentForm" class="form-grid">
+            <!-- Personal Details Section -->
+            <div class="section full-width">
+                <div class="section-header">
+                    <h2 class="section-title"><i class="icon">👤</i> Personal Details</h2>
+                    <button type="button" id="downloadBtn" class="download-btn" title="Download this form">
+                        <i class="icon">⬇️</i> Download
+                    </button>
+                </div>
+                <div class="section-grid">
+                    <!-- First Name -->
+                    <div class="field-container">
+                        <input type="text" id="firstName" name="FirstName" placeholder=" " required>
+                        <label for="firstName">First Name</label>
+                    </div>
 
-          <!-- Last Name -->
-          <div class="field-container">
-            <input type="text" id="lastName" name="LastName" placeholder=" " required>
-            <label for="lastName">Last Name</label>
-          </div>
-          <!-- Customer Reference -->
-          <div class="field-container">
-            <input type="text" id="customerReference" name="CustomerReference" placeholder=" " required>
-            <label for="customerReference">Customer Reference</label>
-          </div>
-          <!-- Company Name -->
-          <div class="field-container">
-            <input type="text" id="companyName" name="CompanyName" placeholder=" ">
-            <label for="companyName">Company Name</label>
-          </div>
-        </div>
-      </div>
+                    <!-- Last Name -->
+                    <div class="field-container">
+                        <input type="text" id="lastName" name="LastName" placeholder=" " required>
+                        <label for="lastName">Last Name</label>
+                    </div>
+                    <!-- Customer Reference -->
+                    <div class="field-container">
+                        <input type="text" id="customerReference" name="CustomerReference" placeholder=" " required>
+                        <label for="customerReference">Customer Reference</label>
+                    </div>
+                    <!-- Company Name -->
+                    <div class="field-container">
+                        <input type="text" id="companyName" name="CompanyName" placeholder=" ">
+                        <label for="companyName">Company Name</label>
+                    </div>
+                </div>
+            </div>
 
-      <!-- Contact Details Section -->
-      <div class="section full-width">
-        <h2 class="section-title"><i class="icon">📧</i> Contact Details</h2>
-        <div class="section-grid">
-          <!-- Contact Details -->
-          <div class="field-container">
-            <input type="text" id="address1" name="Address1" placeholder=" " required>
-            <label for="address1">Address 1</label>
-          </div>
+            <!-- Contact Details Section -->
+            <div class="section full-width">
+                <h2 class="section-title"><i class="icon">📧</i> Contact Details</h2>
+                <div class="section-grid">
+                    <!-- Contact Details -->
+                    <div class="field-container">
+                        <input type="text" id="address1" name="Address1" placeholder=" " required>
+                        <label for="address1">Address 1</label>
+                    </div>
 
-          <!-- Address 2 -->
-          <div class="field-container">
-            <input type="text" id="address2" name="Address2" placeholder=" " required>
-            <label for="address2">Address 2</label>
-          </div>
+                    <!-- Address 2 -->
+                    <div class="field-container">
+                        <input type="text" id="address2" name="Address2" placeholder=" " required>
+                        <label for="address2">Address 2</label>
+                    </div>
 
-          <!-- Suburb -->
-          <div class="field-container">
-            <input type="text" id="suburb" name="Suburb" placeholder=" " required>
-            <label for="suburb">Suburb</label>
-          </div>
+                    <!-- Suburb -->
+                    <div class="field-container">
+                        <input type="text" id="suburb" name="Suburb" placeholder=" " required>
+                        <label for="suburb">Suburb</label>
+                    </div>
 
-          <!-- State -->
-          <div class="field-container">
-            <select id="state" name="State" required>
-              <option value="" disabled selected hidden> </option>
-              <!-- Added hidden attribute for better placeholder behavior -->
-              <option value="NSW">NSW</option>
-              <option value="VIC">VIC</option>
-              <option value="QLD">QLD</option>
-              <option value="ACT">ACT</option>
-              <option value="NT">NT</option>
-              <option value="SA">SA</option>
-              <option value="WA">WA</option>
-              <option value="TAS">TAS</option>
-              <option value="NZ">NZ</option>
-            </select>
-            <label for="state">State</label>
-          </div>
+                    <!-- State -->
+                    <div class="field-container">
+                        <select id="state" name="State" required>
+                            <option value="" disabled selected hidden> </option>
+                            <!-- Added hidden attribute for better placeholder behavior -->
+                            <option value="NSW">NSW</option>
+                            <option value="VIC">VIC</option>
+                            <option value="QLD">QLD</option>
+                            <option value="ACT">ACT</option>
+                            <option value="NT">NT</option>
+                            <option value="SA">SA</option>
+                            <option value="WA">WA</option>
+                            <option value="TAS">TAS</option>
+                            <option value="NZ">NZ</option>
+                        </select>
+                        <label for="state">State</label>
+                    </div>
 
 
-          <!-- Postcode -->
-          <div class="field-container">
-            <input type="text" id="postcode" name="Postcode" placeholder=" " required>
-            <label for="postcode">Postcode</label>
-          </div>
+                    <!-- Postcode -->
+                    <div class="field-container">
+                        <input type="text" id="postcode" name="Postcode" placeholder=" " required>
+                        <label for="postcode">Postcode</label>
+                    </div>
 
-          <!-- Country -->
-          <div class="field-container">
-            <input type="text" id="country" name="Country" placeholder=" " required value="Australia">
-            <label for="country">Country</label>
-          </div>
+                    <!-- Country -->
+                    <div class="field-container">
+                        <input type="text" id="country" name="Country" placeholder=" " required value="Australia">
+                        <label for="country">Country</label>
+                    </div>
 
-          <!-- Email -->
-          <div class="field-container">
-            <input type="email" id="email" name="Email" placeholder=" " required>
-            <label for="email">Email</label>
-          </div>
+                    <!-- Email -->
+                    <div class="field-container">
+                        <input type="email" id="email" name="Email" placeholder=" " required>
+                        <label for="email">Email</label>
+                    </div>
 
-          <!-- Mobile -->
-          <div class="field-container">
-            <input type="tel" id="mobile" name="Mobile" placeholder=" " required>
-            <label for="mobile">Mobile</label>
-          </div>
-        </div>
-      </div>
+                    <!-- Mobile -->
+                    <div class="field-container">
+                        <input type="tel" id="mobile" name="Mobile" placeholder=" " required>
+                        <label for="mobile">Mobile</label>
+                    </div>
+                </div>
+            </div>
 
-      <!-- Payment Details Section -->
-      <div class="section full-width">
-        <h2 class="section-title"><i class="icon">💳</i> Payment Details</h2>
-        <div class="section-grid">
-          <!-- Payment Frequency -->
-          <div class="field-container">
-            <select id="paymentFrequency" name="PaymentFrequency" required>
-              <option value="Monthly" selected>Monthly</option>
-              <option value="Weekly">Weekly</option>
-            </select>
-            <label for="paymentFrequency">Payment Frequency</label>
-          </div>
+            <!-- Payment Details Section -->
+            <div class="section full-width">
+                <h2 class="section-title"><i class="icon">💳</i> Payment Details</h2>
+                <div class="section-grid">
+                    <!-- Payment Frequency -->
+                    <div class="field-container">
+                        <select id="paymentFrequency" name="PaymentFrequency" required>
+                            <option value="Monthly" selected>Monthly</option>
+                            <option value="Weekly">Weekly</option>
+                        </select>
+                        <label for="paymentFrequency">Payment Frequency</label>
+                    </div>
 
-          <!-- Payment Option -->
-          <div class="field-container">
-            <select id="paymentOption" name="PaymentOption" required>
-              <option value="AutoPay" selected>AutoPay</option>
-            </select>
-            <label for="paymentOption">Payment Option</label>
-          </div>
+                    <!-- Payment Option -->
+                    <div class="field-container">
+                        <select id="paymentOption" name="PaymentOption" required>
+                            <option value="AutoPay" selected>AutoPay</option>
+                        </select>
+                        <label for="paymentOption">Payment Option</label>
+                    </div>
 
-          <!-- Total Amount (renamed from Payment Amount) -->
-          <div class="field-container">
-            <input type="number" id="totalAmount" name="TotalAmount" placeholder=" " step="0.01" min="0" required>
-            <label for="totalAmount">Total Amount Due</label>
-          </div>
+                    <!-- Total Amount (renamed from Payment Amount) -->
+                    <div class="field-container">
+                        <input type="number" id="totalAmount" name="TotalAmount" placeholder=" " step="0.01" min="0"
+                            required>
+                        <label for="totalAmount">Total Amount Due</label>
+                    </div>
 
-          <!-- Number of Installments -->
-          <div class="field-container">
-            <input type="number" id="numberOfInstallments" name="NumberOfInstallments" placeholder=" " min="1" required>
-            <label for="numberOfInstallments">Number of Installments</label>
-          </div>
+                    <!-- Number of Installments -->
+                    <div class="field-container">
+                        <input type="number" id="numberOfInstallments" name="NumberOfInstallments" placeholder=" "
+                            min="1" required>
+                        <label for="numberOfInstallments">Number of Installments</label>
+                    </div>
 
-          <!-- Payment Start Date -->
-          <div class="field-container">
-            <input type="date" id="paymentStartDate" name="PaymentStartDate" placeholder=" " required>
-            <label for="paymentStartDate">Payment Start Date</label>
-          </div>
+                    <!-- Payment Start Date -->
+                    <div class="field-container">
+                        <input type="date" id="paymentStartDate" name="PaymentStartDate" placeholder=" " required>
+                        <label for="paymentStartDate">Payment Start Date</label>
+                    </div>
 
-          <!-- Payment End Date (Disabled) -->
-          <div class="field-container">
-            <input type="text" id="paymentEndDate" name="PaymentEndDate" placeholder=" " disabled>
-            <label for="paymentEndDate">Payment End Date</label>
-          </div>
+                    <!-- Payment End Date (Disabled) -->
+                    <div class="field-container">
+                        <input type="text" id="paymentEndDate" name="PaymentEndDate" placeholder=" " disabled>
+                        <label for="paymentEndDate">Payment End Date</label>
+                    </div>
 
-          <!-- Each Installment Amount (new field - read-only) - full width -->
-          <div class="field-container full-width">
-            <input type="text" id="installmentAmount" name="InstallmentAmount" placeholder=" " disabled>
-            <label for="installmentAmount">Each Installment Amount</label>
-          </div>
-        </div>
-      </div>
+                    <!-- Each Installment Amount (new field - read-only) - full width -->
+                    <div class="field-container full-width">
+                        <input type="text" id="installmentAmount" name="InstallmentAmount" placeholder=" " disabled>
+                        <label for="installmentAmount">Each Installment Amount</label>
+                    </div>
+                </div>
+            </div>
 
-      <!-- URL Display Section -->
-      <div class="url-container full-width">
-        <div class="field-container">
-          <input type="text" id="url" name="URL" placeholder=" " disabled>
-          <label for="url">URL</label>
-        </div>
-        <div id="url-tooltip" class="url-tooltip">Full URL will appear here on hover</div>
-      </div>
+            <!-- URL Display Section -->
+            <div class="url-container full-width">
+                <div class="field-container">
+                    <input type="text" id="url" name="URL" placeholder=" " disabled>
+                    <label for="url">URL</label>
+                </div>
+                <div id="url-tooltip" class="url-tooltip">Full URL will appear here on hover</div>
+            </div>
 
-      <!-- Buttons -->
-      <div class="buttons-container">
-        <!-- Test Data Button - Commented out
+            <!-- Buttons -->
+            <div class="buttons-container">
+                <!-- Test Data Button - Commented out
         <button type="button" id="testDataBtn" class="test-btn">Test Data</button>
         -->
-        <button type="button" id="openUrlBtn" class="open-btn" disabled>Open</button>
-      </div>
-    </form>
-  </div>
+                <button type="button" id="openUrlBtn" class="open-btn" disabled>Open</button>
+            </div>
+        </form>
+    </div>
 
-  <script>
-    // Format a date as dd-mmm-yyyy
-    function formatDate(date) {
-      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      const day = date.getDate().toString().padStart(2, '0');
-      const month = months[date.getMonth()];
-      const year = date.getFullYear();
-      return `${day}-${month}-${year}`;
-    }
-
-    // Format date for display (14-April-2025 format)
-    function formatDisplayDate(date) {
-      const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-      const day = date.getDate().toString().padStart(2, '0');
-      const month = months[date.getMonth()];
-      const year = date.getFullYear();
-      return `${day}-${month}-${year}`;
-    }
-
-    // Format a number with 2 decimal places
-    function formatAmount(amount) {
-      return parseFloat(amount).toFixed(2);
-    }
-
-    // Calculate installment amount
-    function calculateInstallmentAmount(totalAmount, installments) {
-      if (!totalAmount || !installments || installments < 1) return '';
-      const amount = parseFloat(totalAmount) / parseInt(installments);
-      return formatAmount(amount);
-    }
-
-    // Calculate end date based on frequency, start date, and installments
-    function calculateEndDate(frequency, startDate, installments) {
-      const start = new Date(startDate);
-      let end;
-
-      if (frequency === 'Monthly') {
-        // Add months
-        end = new Date(start);
-        end.setMonth(end.getMonth() + (installments - 1));
-      } else if (frequency === 'Weekly') {
-        // Add weeks
-        end = new Date(start);
-        end.setDate(end.getDate() + (7 * (installments - 1)));
-      } else {
-        return 'Unsupported Frequency';
-      }
-
-      // Add 1 day to the end date
-      end.setDate(end.getDate() + 1);
-
-      return formatDisplayDate(end);
-    }
-    function generateURL() {
-      const form = document.getElementById('paymentForm');
-      const formData = new FormData(form);
-
-      let url = 'https://pay.zenpay.com.au/setup/zenith123?';
-      const params = [];
-
-      formData.forEach((value, key) => {
-        // Skip these keys entirely
-        if (key === 'TotalAmount' || key === 'NumberOfInstallments' || key === 'InstallmentAmount') {
-          return;
+    <script>
+        // Format a date as dd-mmm-yyyy
+        function formatDate(date) {
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = months[date.getMonth()];
+            const year = date.getFullYear();
+            return `${day}-${month}-${year}`;
         }
 
-        if (key === 'PaymentStartDate') {
-          const dateValue = formatDisplayDate(new Date(value));
-          params.push(`${key}=${encodeURIComponent(dateValue)}`);
-        } else if (key === 'PaymentFrequency') {
-          params.push(`${key}=${encodeURIComponent('Permission_PaymentFrequency_' + value)}`);
-        } else {
-          params.push(`${key}=${encodeURIComponent(value)}`);
-        }
-      });
-
-      // Add payment end date as-is
-      const endDateValue = document.getElementById('paymentEndDate').value;
-      if (endDateValue) {
-        params.push(`PaymentEndDate=${encodeURIComponent(endDateValue)}`);
-      }
-
-      // Rename InstallmentAmount to PaymentAmount
-      const installmentAmountValue = document.getElementById('installmentAmount').value;
-      if (installmentAmountValue) {
-        params.push(`PaymentAmount=${encodeURIComponent(installmentAmountValue)}`);
-      }
-
-      return url + params.join('&');
-    }
-
-
-    // Truncate URL for display
-    function truncateUrl(url) {
-      if (!url) return '';
-      if (url.length <= 100) return url;
-      return url.substring(0, 97) + '...';
-    }
-
-    // Update calculated fields
-    function updateCalculations() {
-      const frequency = document.getElementById('paymentFrequency').value;
-      const installments = document.getElementById('numberOfInstallments').value;
-      const startDate = document.getElementById('paymentStartDate').value;
-      const totalAmount = document.getElementById('totalAmount').value;
-
-      // Calculate installment amount
-      if (totalAmount && installments) {
-        const installmentAmt = calculateInstallmentAmount(totalAmount, installments);
-        document.getElementById('installmentAmount').value = installmentAmt;
-      }
-
-      // Calculate payment end date if all required fields are filled
-      if (frequency && installments && startDate) {
-        const endDate = calculateEndDate(frequency, startDate, installments);
-        document.getElementById('paymentEndDate').value = endDate;
-
-        // Show formatted start date in UI when date is changed
-        if (startDate) {
-          const startDateObj = new Date(startDate);
-          const formattedStartDate = formatDisplayDate(startDateObj);
-          document.getElementById('paymentStartDate').setAttribute('title', formattedStartDate);
+        // Format date for display (14-April-2025 format)
+        function formatDisplayDate(date) {
+            const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = months[date.getMonth()];
+            const year = date.getFullYear();
+            return `${day}-${month}-${year}`;
         }
 
-        // Generate URL once end date is calculated
-        const fullUrl = generateURL();
-        const urlField = document.getElementById('url');
-        const urlTooltip = document.getElementById('url-tooltip');
-
-        // Display truncated URL in the field
-        urlField.value = truncateUrl(fullUrl);
-
-        // Set full URL in the tooltip
-        urlTooltip.textContent = fullUrl;
-
-        // Enable or disable the open button
-        document.getElementById('openUrlBtn').disabled = !fullUrl;
-      }
-    }
-
-    // Handle payment amount formatting on blur (not during typing)
-    function handleAmountBlur() {
-      const amountField = document.getElementById('totalAmount');
-      if (amountField.value) {
-        amountField.value = formatAmount(amountField.value);
-      }
-    }
-
-    // Open URL in a new tab
-    function openUrl() {
-      const urlTooltip = document.getElementById('url-tooltip');
-      const fullUrl = urlTooltip.textContent;
-
-      if (fullUrl && fullUrl !== 'Full URL will appear here on hover') {
-        window.open(fullUrl, '_blank');
-      }
-    }
-    function downloadHtmlFile() {
-      // Clone the document to avoid modifying the current page
-      const documentClone = document.documentElement.cloneNode(true);
-
-      // Find and remove the download button from the clone
-      const downloadBtnToRemove = documentClone.querySelector('#downloadBtn');
-      if (downloadBtnToRemove) {
-        downloadBtnToRemove.parentNode.removeChild(downloadBtnToRemove);
-      }
-
-      // If we used a section-header div that's now empty, fix the structure
-      const sectionHeader = documentClone.querySelector('.section-header');
-      if (sectionHeader) {
-        const sectionTitle = sectionHeader.querySelector('.section-title');
-        if (sectionTitle && sectionHeader.parentNode) {
-          // Move the title directly under the section and remove the header wrapper
-          sectionHeader.parentNode.insertBefore(sectionTitle, sectionHeader);
-          sectionHeader.parentNode.removeChild(sectionHeader);
+        // Format a number with 2 decimal places
+        function formatAmount(amount) {
+            return parseFloat(amount).toFixed(2);
         }
-      }
 
-      // Get the full HTML content from the modified clone
-      const htmlContent = '<!DOCTYPE html>\n' + documentClone.outerHTML;
+        // Calculate installment amount
+        function calculateInstallmentAmount(totalAmount, installments) {
+            if (!totalAmount || !installments || installments < 1) return '';
+            const amount = parseFloat(totalAmount) / parseInt(installments);
+            return formatAmount(amount);
+        }
 
-      // Create a blob with the HTML content
-      const blob = new Blob([htmlContent], { type: 'text/html' });
+        // Calculate end date based on frequency, start date, and installments
+        function calculateEndDate(frequency, startDate, installments) {
+            const start = new Date(startDate);
+            let end;
 
-      // Create a temporary link element
-      const downloadLink = document.createElement('a');
-      downloadLink.href = URL.createObjectURL(blob);
-      downloadLink.download = 'ZenPayURLGenerator.html';
+            if (frequency === 'Monthly') {
+                // Add months
+                end = new Date(start);
+                end.setMonth(end.getMonth() + (installments - 1));
+            } else if (frequency === 'Weekly') {
+                // Add weeks
+                end = new Date(start);
+                end.setDate(end.getDate() + (7 * (installments - 1)));
+            } else {
+                return 'Unsupported Frequency';
+            }
 
-      // Append to the body, click, and remove
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-      document.body.removeChild(downloadLink);
+            // Add 1 day to the end date
+            end.setDate(end.getDate() + 1);
 
-      // Clean up the URL object
-      URL.revokeObjectURL(downloadLink.href);
-    }
-    document.addEventListener('DOMContentLoaded', function() {
-      // Set default values for date fields
-      const today = new Date();
-      const formattedDate = today.toISOString().substr(0, 10); // YYYY-MM-DD format for the date input
-      document.getElementById('paymentStartDate').value = formattedDate;
+            return formatDisplayDate(end);
+        }
+        function generateURL() {
+            const form = document.getElementById('paymentForm');
+            const formData = new FormData(form);
 
-      // Display the formatted start date in the tooltip
-      const formattedDisplayDate = formatDisplayDate(today);
-      document.getElementById('paymentStartDate').setAttribute('title', formattedDisplayDate);
+            let url = 'https://pay.zenpay.com.au/setup/zenith123?';
+            const params = [];
 
-      // Set up event listeners
-      const form = document.getElementById('paymentForm');
-      const inputs = form.querySelectorAll('input:not([disabled]):not(#totalAmount), select');
+            formData.forEach((value, key) => {
+                // Skip these keys entirely
+                if (key === 'TotalAmount' || key === 'NumberOfInstallments' || key === 'InstallmentAmount') {
+                    return;
+                }
 
-      inputs.forEach(input => {
-        input.addEventListener('change', updateCalculations);
-        input.addEventListener('input', updateCalculations);
-      });
+                if (key === 'PaymentStartDate') {
+                    const dateValue = formatDisplayDate(new Date(value));
+                    params.push(`${key}=${encodeURIComponent(dateValue)}`);
+                } else if (key === 'PaymentFrequency') {
+                    params.push(`${key}=${encodeURIComponent('Permission_PaymentFrequency_' + value)}`);
+                } else {
+                    params.push(`${key}=${encodeURIComponent(value)}`);
+                }
+            });
 
-      // Special handling for payment amount to allow typing full values
-      const amountField = document.getElementById('totalAmount');
-      amountField.addEventListener('change', updateCalculations);
-      amountField.addEventListener('blur', handleAmountBlur);
+            // Add payment end date as-is
+            const endDateValue = document.getElementById('paymentEndDate').value;
+            if (endDateValue) {
+                params.push(`PaymentEndDate=${encodeURIComponent(endDateValue)}`);
+            }
 
-      /* Test Data Button event listener - Commented out
-      document.getElementById('testDataBtn').addEventListener('click', fillTestData);
-      */
+            // Rename InstallmentAmount to PaymentAmount
+            const installmentAmountValue = document.getElementById('installmentAmount').value;
+            if (installmentAmountValue) {
+                params.push(`PaymentAmount=${encodeURIComponent(installmentAmountValue)}`);
+            }
 
-      // Set up open URL button
-      document.getElementById('openUrlBtn').addEventListener('click', openUrl);
+            return url + params.join('&');
+        }
 
-      // Prevent form submission (for demo purposes)
-      form.addEventListener('submit', function(event) {
-        event.preventDefault();
-        openUrl();
-      });
 
-      // Set up download button
-      document.getElementById('downloadBtn').addEventListener('click', downloadHtmlFile);
+        // Truncate URL for display
+        function truncateUrl(url) {
+            if (!url) return '';
+            if (url.length <= 100) return url;
+            return url.substring(0, 97) + '...';
+        }
 
-      // Initial calculation to set end date
-      updateCalculations();
-    });
-  </script>
+        // Update calculated fields
+        function updateCalculations() {
+            const frequency = document.getElementById('paymentFrequency').value;
+            const installments = document.getElementById('numberOfInstallments').value;
+            const startDate = document.getElementById('paymentStartDate').value;
+            const totalAmount = document.getElementById('totalAmount').value;
+
+            // Calculate installment amount
+            if (totalAmount && installments) {
+                const installmentAmt = calculateInstallmentAmount(totalAmount, installments);
+                document.getElementById('installmentAmount').value = installmentAmt;
+            }
+
+            // Calculate payment end date if all required fields are filled
+            if (frequency && installments && startDate) {
+                const endDate = calculateEndDate(frequency, startDate, installments);
+                document.getElementById('paymentEndDate').value = endDate;
+
+                // Show formatted start date in UI when date is changed
+                if (startDate) {
+                    const startDateObj = new Date(startDate);
+                    const formattedStartDate = formatDisplayDate(startDateObj);
+                    document.getElementById('paymentStartDate').setAttribute('title', formattedStartDate);
+                }
+
+                // Generate URL once end date is calculated
+                const fullUrl = generateURL();
+                const urlField = document.getElementById('url');
+                const urlTooltip = document.getElementById('url-tooltip');
+
+                // Display truncated URL in the field
+                urlField.value = truncateUrl(fullUrl);
+
+                // Set full URL in the tooltip
+                urlTooltip.textContent = fullUrl;
+
+                // Enable or disable the open button
+                document.getElementById('openUrlBtn').disabled = !fullUrl;
+            }
+        }
+
+        // Handle payment amount formatting on blur (not during typing)
+        function handleAmountBlur() {
+            const amountField = document.getElementById('totalAmount');
+            if (amountField.value) {
+                amountField.value = formatAmount(amountField.value);
+            }
+        }
+
+        // Open URL in a new tab
+        function openUrl() {
+            const urlTooltip = document.getElementById('url-tooltip');
+            const fullUrl = urlTooltip.textContent;
+
+            if (fullUrl && fullUrl !== 'Full URL will appear here on hover') {
+                window.open(fullUrl, '_blank');
+            }
+        }
+        function downloadHtmlFile() {
+            // Clone the document to avoid modifying the current page
+            const documentClone = document.documentElement.cloneNode(true);
+
+            // Find and remove the download button from the clone
+            const downloadBtnToRemove = documentClone.querySelector('#downloadBtn');
+            if (downloadBtnToRemove) {
+                downloadBtnToRemove.parentNode.removeChild(downloadBtnToRemove);
+            }
+
+            // If we used a section-header div that's now empty, fix the structure
+            const sectionHeader = documentClone.querySelector('.section-header');
+            if (sectionHeader) {
+                const sectionTitle = sectionHeader.querySelector('.section-title');
+                if (sectionTitle && sectionHeader.parentNode) {
+                    // Move the title directly under the section and remove the header wrapper
+                    sectionHeader.parentNode.insertBefore(sectionTitle, sectionHeader);
+                    sectionHeader.parentNode.removeChild(sectionHeader);
+                }
+            }
+
+            // Get the full HTML content from the modified clone
+            const htmlContent = '<!DOCTYPE html>\n' + documentClone.outerHTML;
+
+            // Create a blob with the HTML content
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+
+            // Create a temporary link element
+            const downloadLink = document.createElement('a');
+            downloadLink.href = URL.createObjectURL(blob);
+            downloadLink.download = 'ZenPayURLGenerator.html';
+
+            // Append to the body, click, and remove
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+
+            // Clean up the URL object
+            URL.revokeObjectURL(downloadLink.href);
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set default values for date fields
+            const today = new Date();
+            const formattedDate = today.toISOString().substr(0, 10); // YYYY-MM-DD format for the date input
+            document.getElementById('paymentStartDate').value = formattedDate;
+
+            // Display the formatted start date in the tooltip
+            const formattedDisplayDate = formatDisplayDate(today);
+            document.getElementById('paymentStartDate').setAttribute('title', formattedDisplayDate);
+
+            // Set up event listeners
+            const form = document.getElementById('paymentForm');
+            const inputs = form.querySelectorAll('input:not([disabled]):not(#totalAmount), select');
+
+            inputs.forEach(input => {
+                input.addEventListener('change', updateCalculations);
+                input.addEventListener('input', updateCalculations);
+            });
+
+            // Special handling for payment amount to allow typing full values
+            const amountField = document.getElementById('totalAmount');
+            amountField.addEventListener('change', updateCalculations);
+            amountField.addEventListener('blur', handleAmountBlur);
+
+            /* Test Data Button event listener - Commented out
+            document.getElementById('testDataBtn').addEventListener('click', fillTestData);
+            */
+
+            // Set up open URL button
+            document.getElementById('openUrlBtn').addEventListener('click', openUrl);
+
+            // Prevent form submission (for demo purposes)
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                openUrl();
+            });
+
+            // Set up download button
+            document.getElementById('downloadBtn').addEventListener('click', downloadHtmlFile);
+
+            // Initial calculation to set end date
+            updateCalculations();
+        });
+    </script>
 </body>
 
 </html>
