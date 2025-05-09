@@ -6,6 +6,255 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ZenPay Payment Form</title>
     <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f5f5f5;
+            padding: 10px;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 650px;
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 10px;
+        }
+
+        .section {
+            margin-bottom: 10px;
+            background-color: #fcfcfc;
+            border-radius: 6px;
+            padding: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-title {
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+        }
+
+        .icon {
+            margin-right: 8px;
+            font-style: normal;
+        }
+
+        .section-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 5px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .field-container {
+            position: relative;
+            margin-bottom: 0;
+        }
+
+        .field-container input,
+        .field-container select {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background-color: white;
+        }
+
+        .field-container input:focus,
+        .field-container select:focus {
+            outline: none;
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.15);
+        }
+
+        .field-container label {
+            position: absolute;
+            left: 10px;
+            top: 8px;
+            font-size: 14px;
+            color: #777;
+            pointer-events: none;
+            transition: all 0.2s ease;
+            background-color: transparent;
+        }
+
+        .field-container input:focus+label,
+        .field-container input:not(:placeholder-shown)+label,
+        .field-container select:focus+label,
+        .field-container select:not([value='']):valid+label {
+            top: -8px;
+            left: 8px;
+            font-size: 11px;
+            color: #4a90e2;
+            background-color: white;
+            padding: 0 4px;
+        }
+
+        .field-container input:disabled {
+            background-color: #f8f8f8;
+            cursor: not-allowed;
+        }
+
+        .url-container {
+            position: relative;
+            margin: 10px 0;
+            margin-bottom: 16px;
+        }
+
+        .url-tooltip {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: #333;
+            pointer-events: none;
+            color: white;
+            padding: 8px;
+            border-radius: 4px;
+            margin-top: 4px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s, visibility 0.2s;
+            z-index: 100;
+            font-size: 12px;
+            word-break: break-all;
+        }
+
+        .url-container:hover .url-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .buttons-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .open-btn,
+        .test-btn {
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .open-btn {
+            background-color: #4a90e2;
+            color: white;
+        }
+
+        .test-btn {
+            background-color: #f0f0f0;
+            color: #555;
+        }
+
+        .open-btn:hover {
+            background-color: #3a7cc0;
+        }
+
+        .test-btn:hover {
+            background-color: #e0e0e0;
+        }
+
+        .open-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 600px) {
+            .section-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .buttons-container {
+                flex-direction: column;
+            }
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .download-btn {
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+
+        .download-btn:hover {
+            background-color: #3a7cc0;
+        }
+
+        .download-btn .icon {
+            margin-right: 5px;
+        }
+
+        .section-grid.three-column {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .section-grid.two-column {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        @media (max-width: 600px) {
+
+            .section-grid.three-column,
+            .section-grid.two-column {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .validation-message {
+            font-size: 12px;
+            margin-top: 4px;
+            color: #f44336;
+            position: absolute;
+            bottom: -18px;
+            left: 0;
+        }
+
+        .field-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -26,7 +275,7 @@
             width: 100%;
             max-width: 650px;
             background-color: white;
-            padding: 20px;
+            padding: 15px;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
@@ -38,7 +287,7 @@
         }
 
         .section {
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             background-color: #fcfcfc;
             border-radius: 6px;
             padding: 10px;
@@ -261,6 +510,112 @@
             position: relative;
             margin-bottom: 20px;
         }
+
+        .action-buttons-container {
+            display: flex;
+            width: 100%;
+            margin: 20px 0;
+            gap: 15px;
+        }
+
+        .action-button {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 15px;
+            background-color: #005baa;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-button:hover {
+            background-color: #0078d7;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .action-button:active {
+            transform: translateY(1px);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-button.reset {
+            background-color: #f5f5f5;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .action-button.reset:hover {
+            background-color: #e8e8e8;
+        }
+
+        .action-button i {
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .copy-icon {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            background: #4CAF50;
+            border: 1px solid #3e8e41;
+            border-radius: 4px;
+            color: white;
+            font-size: 16px;
+            z-index: 2;
+            padding: 6px 10px;
+            transition: all 0.2s ease;
+        }
+
+        .copy-icon:hover {
+            background-color: #45a049;
+        }
+
+        .copy-icon:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        .copy-tooltip {
+            position: absolute;
+            background-color: #333;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            bottom: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            white-space: nowrap;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+        }
+
+        .copy-tooltip.visible {
+            opacity: 1;
+        }
+
+        /* URL field styling enhancement */
+        .url-container .field-container {
+            position: relative;
+        }
+
+        #url {
+            padding-right: 40px;
+            /* Make room for the copy button */
+        }
     </style>
 </head>
 
@@ -382,6 +737,7 @@
                         <select id="frequency" name="frequency" required>
                             <option value="Monthly" selected>Monthly</option>
                             <option value="Weekly">Weekly</option>
+                            <option value="Fortnightly">Fortnightly</option>
                         </select>
                         <label for="frequency">Payment Frequency</label>
                     </div>
@@ -437,8 +793,19 @@
                 <div class="field-container">
                     <input type="text" id="url" name="URL" placeholder=" " disabled />
                     <label for="url">URL</label>
+                    <button class="copy-icon" id="copyUrlBtn" title="Copy URL">📋</button>
+                    <div class="copy-tooltip" id="copyTooltip">URL copied!</div>
                 </div>
                 <div id="url-tooltip" class="url-tooltip">Full URL will appear here on hover</div>
+            </div>
+
+            <div class="action-buttons-container">
+                <button type="button" onclick="emailLink()" class="action-button">
+                    <i>📧</i>Email Payment Link
+                </button>
+                <button type="button" onclick="resetForm()" class="action-button reset">
+                    <i>🔄</i>Reset Form
+                </button>
             </div>
 
             <div class="buttons-container">
@@ -718,6 +1085,24 @@
             return formatAmount(amount);
         }
 
+        // function calculateEndDate(frequency, startDate, installments) {
+        //     const start = new Date(startDate);
+        //     let end;
+
+        //     if (frequency === 'Monthly') {
+        //         end = new Date(start);
+        //         end.setMonth(end.getMonth() + (installments - 1));
+        //     } else if (frequency === 'Weekly') {
+        //         end = new Date(start);
+        //         end.setDate(end.getDate() + 7 * (installments - 1));
+        //     } else {
+        //         return 'Unsupported Frequency';
+        //     }
+
+        //     end.setDate(end.getDate() + 1);
+
+        //     return formatDisplayDate(end);
+        // }
         function calculateEndDate(frequency, startDate, installments) {
             const start = new Date(startDate);
             let end;
@@ -725,6 +1110,9 @@
             if (frequency === 'Monthly') {
                 end = new Date(start);
                 end.setMonth(end.getMonth() + (installments - 1));
+            } else if (frequency === 'Fortnightly') {
+                end = new Date(start);
+                end.setDate(end.getDate() + 14 * (installments - 1));
             } else if (frequency === 'Weekly') {
                 end = new Date(start);
                 end.setDate(end.getDate() + 7 * (installments - 1));
@@ -736,7 +1124,6 @@
 
             return formatDisplayDate(end);
         }
-
 
         function generateURL() {
             const form = document.getElementById('paymentForm');
@@ -836,6 +1223,7 @@
                 window.open(fullUrl, '_blank');
             }
         }
+
         function downloadHtmlFile() {
             const documentClone = document.documentElement.cloneNode(true);
             const downloadBtnToRemove = documentClone.querySelector('#downloadBtn');
@@ -861,10 +1249,7 @@
 
             const scripts = documentClone.querySelectorAll('script');
             scripts.forEach(script => {
-                if (script.textContent.includes('KEY = \'merchantCode\'') ||
-                    script.textContent.includes('ensurePersistence') ||
-                    script.textContent.includes('clearMerchantStorage') ||
-                    script.textContent.includes('openSettingsDB')) {
+                if (script.textContent.includes("KEY = 'merchantCode'") || script.textContent.includes('ensurePersistence') || script.textContent.includes('clearMerchantStorage') || script.textContent.includes('openSettingsDB')) {
                     script.parentNode.removeChild(script);
                 }
             });
@@ -898,6 +1283,9 @@
             if (frequency === 'Monthly') {
                 end = new Date(start);
                 end.setMonth(end.getMonth() + (parseInt(installments) - 1));
+            } else if (frequency === 'Fortnightly') {
+                end = new Date(start);
+                end.setDate(end.getDate() + 14 * (parseInt(installments) - 1));
             } else if (frequency === 'Weekly') {
                 end = new Date(start);
                 end.setDate(end.getDate() + 7 * (parseInt(installments) - 1));
@@ -1065,8 +1453,123 @@
             updateCalculations();
         });
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const copyUrlBtn = document.getElementById('copyUrlBtn');
+            const copyTooltip = document.getElementById('copyTooltip');
 
+            if (copyUrlBtn) {
+                copyUrlBtn.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
 
+                    const urlField = document.getElementById('url');
+                    const urlTooltip = document.getElementById('url-tooltip');
+
+                    const textToCopy = urlTooltip.textContent !== 'Full URL will appear here on hover'
+                        ? urlTooltip.textContent
+                        : urlField.value;
+
+                    if (textToCopy && textToCopy !== 'Full URL will appear here on hover') {
+                        navigator.clipboard.writeText(textToCopy).then(function() {
+                            copyTooltip.classList.add('visible');
+
+                            setTimeout(function() {
+                                copyTooltip.classList.remove('visible');
+                            }, 2000);
+                        }).catch(function(err) {
+                            console.error('Could not copy text: ', err);
+                        });
+                    }
+
+                    return false;
+                });
+            }
+        });
+    </script>
+    <script>
+        function emailLink() {
+            const urlTooltip = document.getElementById('url-tooltip');
+            const fullUrl = urlTooltip.textContent;
+            if (fullUrl && fullUrl !== 'Full URL will appear here on hover') {
+                const firstName = document.getElementById('firstName').value || 'Customer';
+                const lastName = document.getElementById('lastName').value || '';
+                const fullName = firstName + (lastName ? ' ' + lastName : '');
+                const email = document.getElementById('email').value;
+                const endDate = document.getElementById('paymentEndDate').value;
+                const totalAmount = document.getElementById('totalAmount').value;
+                const installmentAmount = document.getElementById('installmentAmount').value;
+                const numberOfInstallments = document.getElementById('numberOfInstallments').value;
+                const frequency = document.getElementById('frequency').value;
+                const emailTemplate = `
+Dear ${fullName},
+
+Thank you for choosing Zenith Payments for your payment solution.
+
+Your payment plan has been set up with the following details:
+
+- Total Amount: $${totalAmount}
+- Payment Frequency: ${frequency}
+- Number of Installments: ${numberOfInstallments}
+- Each Installment Amount: $${installmentAmount}
+- End Date: ${endDate}
+
+To complete your payment setup, please:
+
+1. Click here to access your secure payment portal:
+   ${fullUrl}
+
+2. Verify your information is correct
+3. Enter your payment details
+4. Confirm your payment schedule
+
+If you have any questions, our support team is here to help.
+
+Thank you for your business!
+
+Regards,
+Zenith Payments Team
+`;
+
+                // Use a better subject line
+                const mailtoLink = `mailto:${email}?subject=Your Zenith Payment Plan&body=${encodeURIComponent(emailTemplate)}`;
+                window.location.href = mailtoLink;
+            } else {
+                alert('Please complete the form first to generate a payment URL.');
+            }
+        }
+    </script>
+    <script>
+        function resetForm() {
+            const form = document.getElementById('paymentForm');
+            form.reset();
+
+            document.getElementById('paymentEndDate').value = '';
+            document.getElementById('installmentAmount').value = '';
+            document.getElementById('url').value = '';
+            document.getElementById('url-tooltip').textContent = 'Full URL will appear here on hover';
+            document.getElementById('openUrlBtn').disabled = true;
+
+            const today = new Date();
+            const formattedDate = today.toISOString().substr(0, 10);
+            document.getElementById('paymentStartDate').value = formattedDate;
+
+            updateCalculations();
+
+            const inputs = form.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.style.borderColor = '';
+                input.setCustomValidity('');
+            });
+
+            const emailValidation = document.getElementById('emailValidation');
+            if (emailValidation) {
+                emailValidation.textContent = '';
+            }
+
+            console.log('Form has been reset');
+        }
+    </script>
 </body>
 
 </html>
