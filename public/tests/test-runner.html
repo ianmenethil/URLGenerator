@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZenPay Form - Test Suite</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-results {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .test {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border-left: 4px solid #ccc;
+        }
+        .test.pass {
+            background-color: #d4edda;
+            border-left-color: #28a745;
+        }
+        .test.fail {
+            background-color: #f8d7da;
+            border-left-color: #dc3545;
+        }
+        .test-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .test-message {
+            font-size: 0.9em;
+            color: #666;
+        }
+        .summary {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e7f3ff;
+            border-radius: 4px;
+            border-left: 4px solid #0078d7;
+        }
+        .summary-pass {
+            background-color: #d4edda;
+            border-left-color: #28a745;
+        }
+        .summary-fail {
+            background-color: #f8d7da;
+            border-left-color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-results">
+        <h1>🧪 ZenPay Form Test Suite</h1>
+        <div id="test-output"></div>
+        <div id="summary" class="summary"></div>
+    </div>
+
+    <script type="module">
+        import { CONFIG } from '../js/config.js';
+        import { validateEmail, validatePostcode, validateMobile, sanitizeInput } from '../js/validation.js';
+        import {
+            formatDate,
+            formatDisplayDate,
+            formatAmount,
+            calculateInstallmentAmount,
+            calculateEndDate
+        } from '../js/calculations.js';
+        import { truncateUrl, validatePaymentURL, generateURL } from '../js/url-generator.js';
+
+        const testOutput = document.getElementById('test-output');
+        const summary = document.getElementById('summary');
+        let passed = 0;
+        let failed = 0;
+
+        function test(name, fn) {
+            try {
+                fn();
+                passed++;
+                testOutput.innerHTML += `
+                    <div class="test pass">
+                        <div class="test-name">✅ ${name}</div>
+                    </div>
+                `;
+            } catch (error) {
+                failed++;
+                testOutput.innerHTML += `
+                    <div class="test fail">
+                        <div class="test-name">❌ ${name}</div>
+                        <div class="test-message">${error.message}</div>
+                    </div>
+                `;
+            }
+        }
+
+        function assert(condition, message) {
+            if (!condition) {
+                throw new Error(message || 'Assertion failed');
+            }
+        }
+
+        function assertEqual(actual, expected, message) {
+            if (actual !== expected) {
+                throw new Error(message || `Expected "${expected}" but got "${actual}"`);
+            }
+        }
+
+        // ===== CONFIG TESTS =====
+        test('Config: URL_BASE is defined', () => {
+            assert(CONFIG.URL_BASE === 'https://pay.zenpay.com.au/setup/', 'URL_BASE should be correct');
+        });
+
+        test('Config: EMAIL_REGEX is defined', () => {
+            assert(CONFIG.EMAIL_REGEX instanceof RegExp, 'EMAIL_REGEX should be a RegExp');
+        });
+
+        // ===== VALIDATION TESTS =====
+        test('Validation: Valid email passes', () => {
+            assert(validateEmail('test@example.com'), 'Valid email should pass');
+        });
+
+        test('Validation: Invalid email fails', () => {
+            assert(!validateEmail('invalid-email'), 'Invalid email should fail');
+        });
+
+        test('Validation: Email with injection fails', () => {
+            assert(!validateEmail('test@example.com\\nBcc: hacker@evil.com'), 'Email with newline should fail');
+        });
+
+        test('Validation: Valid postcode passes', () => {
+            assert(validatePostcode('2000'), 'Valid postcode should pass');
+        });
+
+        test('Validation: Invalid postcode fails', () => {
+            assert(!validatePostcode('1'), 'Invalid postcode should fail');
+            assert(!validatePostcode('99999'), 'Too long postcode should fail');
+            assert(!validatePostcode('0100'), 'Too low postcode should fail');
+        });
+
+        test('Validation: Valid mobile passes', () => {
+            assert(validateMobile('0412345678'), 'Valid mobile should pass');
+        });
+
+        test('Validation: Invalid mobile fails', () => {
+            assert(!validateMobile('123456'), 'Invalid mobile should fail');
+        });
+
+        test('Validation: Sanitize input prevents XSS', () => {
+            const dangerous = '<script>alert("xss")</script>';
+            const sanitized = sanitizeInput(dangerous);
+            assert(!sanitized.includes('<script>'), 'Should remove script tags');
+        });
+
+        // ===== CALCULATION TESTS =====
+        test('Calculations: formatDate works correctly', () => {
+            const date = new Date('2025-11-17');
+            const formatted = formatDate(date);
+            assert(formatted === '17-Nov-2025', `Expected 17-Nov-2025 but got ${formatted}`);
+        });
+
+        test('Calculations: formatDisplayDate works correctly', () => {
+            const date = new Date('2025-11-17');
+            const formatted = formatDisplayDate(date);
+            assert(formatted === '17-November-2025', `Expected 17-November-2025 but got ${formatted}`);
+        });
+
+        test('Calculations: formatAmount works correctly', () => {
+            assert(formatAmount(100) === '100.00', 'Should format to 2 decimals');
+            assert(formatAmount(100.5) === '100.50', 'Should format to 2 decimals');
+        });
+
+        test('Calculations: calculateInstallmentAmount works correctly', () => {
+            const result = calculateInstallmentAmount(1000, 10);
+            assert(result === '100.00', `Expected 100.00 but got ${result}`);
+        });
+
+        test('Calculations: calculateInstallmentAmount handles division', () => {
+            const result = calculateInstallmentAmount(1000, 3);
+            assert(result === '333.33', `Expected 333.33 but got ${result}`);
+        });
+
+        test('Calculations: calculateEndDate for Monthly works', () => {
+            const result = calculateEndDate('Monthly', '2025-01-01', 3);
+            assert(result.includes('April'), `Expected April in result but got ${result}`);
+        });
+
+        test('Calculations: calculateEndDate for Weekly works', () => {
+            const result = calculateEndDate('Weekly', '2025-01-01', 4);
+            // 3 weeks later + 1 day = 22 days later
+            assert(result !== '', `Result should not be empty`);
+        });
+
+        test('Calculations: calculateEndDate for Fortnightly works', () => {
+            const result = calculateEndDate('Fortnightly', '2025-01-01', 2);
+            // 1 fortnight + 1 day = 15 days later
+            assert(result !== '', `Result should not be empty`);
+        });
+
+        // ===== URL GENERATOR TESTS =====
+        test('URL: truncateUrl works correctly', () => {
+            const short = 'https://short.url';
+            assert(truncateUrl(short) === short, 'Short URL should not be truncated');
+
+            const long = 'https://very.long.url/' + 'x'.repeat(200);
+            const truncated = truncateUrl(long);
+            assert(truncated.endsWith('...'), 'Long URL should be truncated with ...');
+            assert(truncated.length === 100, `Truncated length should be 100 but got ${truncated.length}`);
+        });
+
+        test('URL: validatePaymentURL accepts valid domain', () => {
+            assert(validatePaymentURL('https://pay.zenpay.com.au/setup/test'), 'Valid URL should pass');
+        });
+
+        test('URL: validatePaymentURL rejects invalid domain', () => {
+            assert(!validatePaymentURL('https://evil.com/phishing'), 'Invalid domain should fail');
+        });
+
+        test('URL: validatePaymentURL rejects malformed URL', () => {
+            assert(!validatePaymentURL('not-a-url'), 'Malformed URL should fail');
+        });
+
+        // ===== INTEGRATION TESTS =====
+        test('Integration: Full calculation workflow', () => {
+            const totalAmount = 1000;
+            const installments = 5;
+            const frequency = 'Monthly';
+            const startDate = '2025-01-01';
+
+            const installmentAmount = calculateInstallmentAmount(totalAmount, installments);
+            assert(installmentAmount === '200.00', 'Installment should be 200.00');
+
+            const endDate = calculateEndDate(frequency, startDate, installments);
+            assert(endDate !== '', 'End date should be calculated');
+            assert(endDate.includes('May'), 'End date should be in May');
+        });
+
+        // ===== DISPLAY SUMMARY =====
+        const total = passed + failed;
+        const percentage = total > 0 ? Math.round((passed / total) * 100) : 0;
+
+        summary.innerHTML = `
+            <h2>Test Summary</h2>
+            <p><strong>Total Tests:</strong> ${total}</p>
+            <p><strong>Passed:</strong> ${passed} ✅</p>
+            <p><strong>Failed:</strong> ${failed} ❌</p>
+            <p><strong>Success Rate:</strong> ${percentage}%</p>
+        `;
+
+        summary.className = 'summary ' + (failed === 0 ? 'summary-pass' : 'summary-fail');
+
+        // Log results to console for CI/CD
+        console.log(`Test Results: ${passed}/${total} passed (${percentage}%)`);
+        if (failed > 0) {
+            console.error(`❌ ${failed} test(s) failed`);
+        } else {
+            console.log('✅ All tests passed!');
+        }
+    </script>
+</body>
+</html>

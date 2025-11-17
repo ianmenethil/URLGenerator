@@ -1,0 +1,262 @@
+/* ZenPay Payment Form - Form Styles */
+/* Form fields, inputs, buttons, and validation */
+
+.section-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.section-grid.grid-three-column {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.section-grid.grid-two-column {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.field-container {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.field-container input,
+.field-container select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background-color: white;
+}
+
+.field-container input:focus,
+.field-container select:focus {
+    outline: none;
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.15);
+}
+
+/* Enhanced focus for keyboard users */
+.field-container input:focus-visible,
+.field-container select:focus-visible {
+    outline: 3px solid #4a90e2;
+    outline-offset: 2px;
+}
+
+.field-container label {
+    position: absolute;
+    left: 10px;
+    top: 8px;
+    font-size: 14px;
+    color: #555;
+    pointer-events: none;
+    transition: all 0.2s ease;
+    background-color: transparent;
+}
+
+.field-container input:focus + label,
+.field-container input:not(:placeholder-shown) + label,
+.field-container select:focus + label,
+.field-container select:not([value='']):valid + label {
+    top: -8px;
+    left: 8px;
+    font-size: 11px;
+    color: #4a90e2;
+    background-color: white;
+    padding: 0 4px;
+}
+
+.field-container input:disabled {
+    background-color: #f8f8f8;
+    cursor: not-allowed;
+}
+
+.validation-message {
+    font-size: 12px;
+    margin-top: 4px;
+    color: #f44336;
+    position: absolute;
+    bottom: -18px;
+    left: 0;
+}
+
+/* URL Container */
+.url-container {
+    position: relative;
+    margin: 10px 0;
+    margin-bottom: 16px;
+}
+
+.url-tooltip {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #333;
+    pointer-events: none;
+    color: white;
+    padding: 8px;
+    border-radius: 4px;
+    margin-top: 4px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s;
+    z-index: 100;
+    font-size: 12px;
+    word-break: break-all;
+}
+
+.url-container:hover .url-tooltip,
+.url-container:focus-within .url-tooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
+#url {
+    padding-right: 40px;
+}
+
+/* Buttons */
+.buttons-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.open-btn,
+.test-btn {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+    flex: 1;
+}
+
+.open-btn {
+    background-color: #4a90e2;
+    color: white;
+}
+
+.test-btn {
+    background-color: #f0f0f0;
+    color: #555;
+}
+
+.open-btn:hover {
+    background-color: #3a7cc0;
+}
+
+.test-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.open-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* Action Buttons */
+.action-buttons-container {
+    display: flex;
+    width: 100%;
+    margin: 20px 0;
+    gap: 15px;
+}
+
+.action-button {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 15px;
+    background-color: #005baa;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.action-button:hover {
+    background-color: #0078d7;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
+}
+
+.action-button:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.action-button.reset {
+    background-color: #f5f5f5;
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+.action-button.reset:hover {
+    background-color: #e8e8e8;
+}
+
+.action-button i {
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+/* Copy Button */
+.copy-icon {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    background: #4CAF50;
+    border: 1px solid #3e8e41;
+    border-radius: 4px;
+    color: white;
+    font-size: 16px;
+    z-index: 2;
+    padding: 6px 10px;
+    transition: all 0.2s ease;
+}
+
+.copy-icon:hover {
+    background-color: #45a049;
+}
+
+.copy-icon:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.copy-tooltip {
+    position: absolute;
+    background-color: #333;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    bottom: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    white-space: nowrap;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+}
+
+.copy-tooltip.visible {
+    opacity: 1;
+}
