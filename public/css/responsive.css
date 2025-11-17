@@ -1,0 +1,18 @@
+/* ZenPay Payment Form - Responsive Styles */
+/* Mobile and tablet breakpoints */
+
+@media (max-width: 600px) {
+    .section-grid,
+    .section-grid.grid-three-column,
+    .section-grid.grid-two-column {
+        grid-template-columns: 1fr;
+    }
+
+    .buttons-container {
+        flex-direction: column;
+    }
+
+    .action-buttons-container {
+        flex-direction: column;
+    }
+}
