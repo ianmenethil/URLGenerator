@@ -340,7 +340,8 @@
                     `Expected 100.00, got ${installment}`);
 
                 const endDate = calculateEndDate('Monthly', '2025-01-01', 3);
-                const endDateTest = endDate.includes('April');
+                // 3 monthly payments: Jan 1, Feb 1, Mar 1, then +1 day = Mar 2
+                const endDateTest = endDate.includes('March');
                 addResult('functionalityTests', 'End date calculation', endDateTest,
                     `End date: ${endDate}`);
 

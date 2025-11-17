@@ -193,7 +193,8 @@
 
         test('Calculations: calculateEndDate for Monthly works', () => {
             const result = calculateEndDate('Monthly', '2025-01-01', 3);
-            assert(result.includes('April'), `Expected April in result but got ${result}`);
+            // 3 monthly payments: Jan 1, Feb 1, Mar 1, then +1 day = Mar 2
+            assert(result.includes('March'), `Expected March in result but got ${result}`);
         });
 
         test('Calculations: calculateEndDate for Weekly works', () => {

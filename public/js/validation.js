@@ -12,9 +12,21 @@ import { CONFIG, ERROR_MESSAGES } from './config.js';
  */
 export function sanitizeInput(input) {
     if (!input) return '';
-    const div = document.createElement('div');
-    div.textContent = input;
-    return div.innerHTML;
+
+    // Check if running in browser environment
+    if (typeof document !== 'undefined') {
+        const div = document.createElement('div');
+        div.textContent = input;
+        return div.innerHTML;
+    }
+
+    // Fallback for Node.js environment (for testing)
+    return input
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
 }
 
 /**
