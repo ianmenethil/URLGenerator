@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integration Test - ZenPay Form</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .test-panel {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .test-panel h2 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 2px solid #4a90e2;
+            padding-bottom: 10px;
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border-left: 4px solid #ccc;
+        }
+        .test-result.pass {
+            background-color: #d4edda;
+            border-left-color: #28a745;
+        }
+        .test-result.fail {
+            background-color: #f8d7da;
+            border-left-color: #dc3545;
+        }
+        .test-result.info {
+            background-color: #d1ecf1;
+            border-left-color: #17a2b8;
+        }
+        .status {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        .status.ok { background: #28a745; color: white; }
+        .status.error { background: #dc3545; color: white; }
+        .status.warning { background: #ffc107; color: #333; }
+        .iframe-container {
+            grid-column: 1 / -1;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        iframe {
+            width: 100%;
+            height: 800px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .summary {
+            grid-column: 1 / -1;
+            background: #e7f3ff;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #0078d7;
+        }
+        button {
+            background: #4a90e2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #3a7cc0;
+        }
+        .log-entry {
+            font-family: monospace;
+            font-size: 0.9em;
+            padding: 5px;
+            margin: 2px 0;
+            background: #f8f9fa;
+            border-left: 3px solid #6c757d;
+        }
+        .log-entry.error { border-left-color: #dc3545; color: #dc3545; }
+        .log-entry.warn { border-left-color: #ffc107; color: #856404; }
+        .log-entry.info { border-left-color: #17a2b8; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <h1>🧪 ZenPay Form - Integration Test Suite</h1>
+
+    <div class="test-container">
+        <!-- Module Loading Tests -->
+        <div class="test-panel">
+            <h2>📦 Module Loading</h2>
+            <div id="module-tests"></div>
+        </div>
+
+        <!-- Functionality Tests -->
+        <div class="test-panel">
+            <h2>⚙️ Functionality Tests</h2>
+            <div id="functionality-tests"></div>
+        </div>
+
+        <!-- File Structure Tests -->
+        <div class="test-panel">
+            <h2>📁 File Structure</h2>
+            <div id="file-tests"></div>
+        </div>
+
+        <!-- Performance Tests -->
+        <div class="test-panel">
+            <h2>⚡ Performance</h2>
+            <div id="performance-tests"></div>
+        </div>
+
+        <!-- Console Log -->
+        <div class="test-panel" style="grid-column: 1 / -1;">
+            <h2>📋 Console Output</h2>
+            <button onclick="clearConsole()">Clear Console</button>
+            <button onclick="runAllTests()">Run All Tests</button>
+            <div id="console-log" style="max-height: 300px; overflow-y: auto;"></div>
+        </div>
+
+        <!-- Summary -->
+        <div class="summary" id="summary">
+            <h2>📊 Test Summary</h2>
+            <p>Click "Run All Tests" to begin testing...</p>
+        </div>
+
+        <!-- Live Form Preview -->
+        <div class="iframe-container">
+            <h2>👁️ Live Form Preview</h2>
+            <iframe src="../index.html" id="form-iframe"></iframe>
+        </div>
+    </div>
+
+    <script type="module">
+        const results = {
+            moduleTests: [],
+            functionalityTests: [],
+            fileTests: [],
+            performanceTests: []
+        };
+
+        let consoleLog = [];
+
+        function log(message, type = 'info') {
+            consoleLog.push({ message, type, time: new Date().toISOString() });
+            updateConsole();
+        }
+
+        function updateConsole() {
+            const consoleEl = document.getElementById('console-log');
+            consoleEl.innerHTML = consoleLog.map(entry =>
+                `<div class="log-entry ${entry.type}">[${entry.time.split('T')[1].split('.')[0]}] ${entry.message}</div>`
+            ).join('');
+            consoleEl.scrollTop = consoleEl.scrollHeight;
+        }
+
+        function clearConsole() {
+            consoleLog = [];
+            updateConsole();
+        }
+
+        window.clearConsole = clearConsole;
+
+        function addResult(category, name, passed, message = '') {
+            results[category].push({ name, passed, message });
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            // Update module tests
+            document.getElementById('module-tests').innerHTML = results.moduleTests.map(r =>
+                `<div class="test-result ${r.passed ? 'pass' : 'fail'}">
+                    ${r.passed ? '✅' : '❌'} ${r.name}
+                    ${r.message ? `<br><small>${r.message}</small>` : ''}
+                </div>`
+            ).join('');
+
+            // Update functionality tests
+            document.getElementById('functionality-tests').innerHTML = results.functionalityTests.map(r =>
+                `<div class="test-result ${r.passed ? 'pass' : 'fail'}">
+                    ${r.passed ? '✅' : '❌'} ${r.name}
+                    ${r.message ? `<br><small>${r.message}</small>` : ''}
+                </div>`
+            ).join('');
+
+            // Update file tests
+            document.getElementById('file-tests').innerHTML = results.fileTests.map(r =>
+                `<div class="test-result ${r.passed ? 'pass' : 'fail'}">
+                    ${r.passed ? '✅' : '❌'} ${r.name}
+                    ${r.message ? `<br><small>${r.message}</small>` : ''}
+                </div>`
+            ).join('');
+
+            // Update performance tests
+            document.getElementById('performance-tests').innerHTML = results.performanceTests.map(r =>
+                `<div class="test-result ${r.passed ? 'pass' : 'fail'}">
+                    ${r.passed ? '✅' : '❌'} ${r.name}
+                    ${r.message ? `<br><small>${r.message}</small>` : ''}
+                </div>`
+            ).join('');
+
+            // Update summary
+            const total = Object.values(results).reduce((sum, arr) => sum + arr.length, 0);
+            const passed = Object.values(results).reduce((sum, arr) =>
+                sum + arr.filter(r => r.passed).length, 0);
+            const failed = total - passed;
+            const percentage = total > 0 ? Math.round((passed / total) * 100) : 0;
+
+            document.getElementById('summary').innerHTML = `
+                <h2>📊 Test Summary</h2>
+                <p><strong>Total Tests:</strong> ${total}</p>
+                <p><strong>Passed:</strong> ${passed} ✅</p>
+                <p><strong>Failed:</strong> ${failed} ❌</p>
+                <p><strong>Success Rate:</strong> ${percentage}%</p>
+                <p><strong>Status:</strong> ${failed === 0 ?
+                    '<span class="status ok">ALL TESTS PASSED</span>' :
+                    '<span class="status error">SOME TESTS FAILED</span>'}</p>
+            `;
+        }
+
+        async function testModuleLoading() {
+            log('Testing module loading...', 'info');
+
+            try {
+                const { CONFIG } = await import('../js/config.js');
+                addResult('moduleTests', 'config.js loads', true, 'Configuration module loaded');
+                log('✅ config.js loaded successfully', 'info');
+            } catch (e) {
+                addResult('moduleTests', 'config.js loads', false, e.message);
+                log('❌ config.js failed: ' + e.message, 'error');
+            }
+
+            try {
+                const storage = await import('../js/storage.js');
+                addResult('moduleTests', 'storage.js loads', true, 'Storage module loaded');
+                log('✅ storage.js loaded successfully', 'info');
+            } catch (e) {
+                addResult('moduleTests', 'storage.js loads', false, e.message);
+                log('❌ storage.js failed: ' + e.message, 'error');
+            }
+
+            try {
+                const validation = await import('../js/validation.js');
+                addResult('moduleTests', 'validation.js loads', true, 'Validation module loaded');
+                log('✅ validation.js loaded successfully', 'info');
+            } catch (e) {
+                addResult('moduleTests', 'validation.js loads', false, e.message);
+                log('❌ validation.js failed: ' + e.message, 'error');
+            }
+
+            try {
+                const calculations = await import('../js/calculations.js');
+                addResult('moduleTests', 'calculations.js loads', true, 'Calculations module loaded');
+                log('✅ calculations.js loaded successfully', 'info');
+            } catch (e) {
+                addResult('moduleTests', 'calculations.js loads', false, e.message);
+                log('❌ calculations.js failed: ' + e.message, 'error');
+            }
+
+            try {
+                const urlGen = await import('../js/url-generator.js');
+                addResult('moduleTests', 'url-generator.js loads', true, 'URL generator module loaded');
+                log('✅ url-generator.js loaded successfully', 'info');
+            } catch (e) {
+                addResult('moduleTests', 'url-generator.js loads', false, e.message);
+                log('❌ url-generator.js failed: ' + e.message, 'error');
+            }
+
+            try {
+                const ui = await import('../js/ui.js');
+                addResult('moduleTests', 'ui.js loads', true, 'UI module loaded');
+                log('✅ ui.js loaded successfully', 'info');
+            } catch (e) {
+                addResult('moduleTests', 'ui.js loads', false, e.message);
+                log('❌ ui.js failed: ' + e.message, 'error');
+            }
+
+            try {
+                const download = await import('../js/download.js');
+                addResult('moduleTests', 'download.js loads', true, 'Download module loaded');
+                log('✅ download.js loaded successfully', 'info');
+            } catch (e) {
+                addResult('moduleTests', 'download.js loads', false, e.message);
+                log('❌ download.js failed: ' + e.message, 'error');
+            }
+        }
+
+        async function testFunctionality() {
+            log('Testing core functionality...', 'info');
+
+            try {
+                const { validateEmail, validatePostcode, validateMobile } = await import('../js/validation.js');
+
+                const emailTest = validateEmail('test@example.com');
+                addResult('functionalityTests', 'Email validation works', emailTest,
+                    emailTest ? 'Valid email accepted' : 'Valid email rejected');
+
+                const postcodeTest = validatePostcode('2000');
+                addResult('functionalityTests', 'Postcode validation works', postcodeTest,
+                    postcodeTest ? 'Valid postcode accepted' : 'Valid postcode rejected');
+
+                const mobileTest = validateMobile('0412345678');
+                addResult('functionalityTests', 'Mobile validation works', mobileTest,
+                    mobileTest ? 'Valid mobile accepted' : 'Valid mobile rejected');
+
+                log('✅ Validation functions working correctly', 'info');
+            } catch (e) {
+                addResult('functionalityTests', 'Validation functions', false, e.message);
+                log('❌ Validation test failed: ' + e.message, 'error');
+            }
+
+            try {
+                const { calculateInstallmentAmount, calculateEndDate } = await import('../js/calculations.js');
+
+                const installment = calculateInstallmentAmount(1000, 10);
+                const installmentTest = installment === '100.00';
+                addResult('functionalityTests', 'Installment calculation', installmentTest,
+                    `Expected 100.00, got ${installment}`);
+
+                const endDate = calculateEndDate('Monthly', '2025-01-01', 3);
+                const endDateTest = endDate.includes('April');
+                addResult('functionalityTests', 'End date calculation', endDateTest,
+                    `End date: ${endDate}`);
+
+                log('✅ Calculation functions working correctly', 'info');
+            } catch (e) {
+                addResult('functionalityTests', 'Calculation functions', false, e.message);
+                log('❌ Calculation test failed: ' + e.message, 'error');
+            }
+
+            try {
+                const { truncateUrl, validatePaymentURL } = await import('../js/url-generator.js');
+
+                const shortUrl = 'https://short.url';
+                const truncTest = truncateUrl(shortUrl) === shortUrl;
+                addResult('functionalityTests', 'URL truncation', truncTest,
+                    'Short URLs not truncated');
+
+                const validUrl = validatePaymentURL('https://pay.zenpay.com.au/setup/test');
+                addResult('functionalityTests', 'URL validation', validUrl,
+                    'Valid domain accepted');
+
+                log('✅ URL functions working correctly', 'info');
+            } catch (e) {
+                addResult('functionalityTests', 'URL functions', false, e.message);
+                log('❌ URL test failed: ' + e.message, 'error');
+            }
+        }
+
+        async function testFileStructure() {
+            log('Testing file structure...', 'info');
+
+            const cssFiles = ['main.css', 'form.css', 'responsive.css'];
+            for (const file of cssFiles) {
+                try {
+                    const response = await fetch(`../css/${file}`);
+                    const exists = response.ok;
+                    addResult('fileTests', `CSS: ${file}`, exists,
+                        exists ? `File exists (${response.headers.get('content-length')} bytes)` : 'File not found');
+                    if (exists) {
+                        log(`✅ ${file} found`, 'info');
+                    } else {
+                        log(`❌ ${file} not found`, 'error');
+                    }
+                } catch (e) {
+                    addResult('fileTests', `CSS: ${file}`, false, e.message);
+                    log(`❌ ${file} error: ${e.message}`, 'error');
+                }
+            }
+
+            const jsFiles = ['config.js', 'storage.js', 'validation.js', 'calculations.js',
+                            'url-generator.js', 'ui.js', 'download.js', 'main.js'];
+            for (const file of jsFiles) {
+                try {
+                    const response = await fetch(`../js/${file}`);
+                    const exists = response.ok;
+                    addResult('fileTests', `JS: ${file}`, exists,
+                        exists ? `File exists (${response.headers.get('content-length')} bytes)` : 'File not found');
+                    if (exists) {
+                        log(`✅ ${file} found`, 'info');
+                    } else {
+                        log(`❌ ${file} not found`, 'error');
+                    }
+                } catch (e) {
+                    addResult('fileTests', `JS: ${file}`, false, e.message);
+                    log(`❌ ${file} error: ${e.message}`, 'error');
+                }
+            }
+        }
+
+        async function testPerformance() {
+            log('Testing performance...', 'info');
+
+            try {
+                // Test module load time
+                const startTime = performance.now();
+                await import('../js/config.js');
+                await import('../js/calculations.js');
+                await import('../js/validation.js');
+                const endTime = performance.now();
+                const loadTime = endTime - startTime;
+
+                addResult('performanceTests', 'Module load time', loadTime < 100,
+                    `Loaded in ${loadTime.toFixed(2)}ms`);
+                log(`Module load time: ${loadTime.toFixed(2)}ms`, loadTime < 100 ? 'info' : 'warn');
+
+                // Test calculation performance
+                const { calculateInstallmentAmount } = await import('../js/calculations.js');
+                const calcStart = performance.now();
+                for (let i = 0; i < 1000; i++) {
+                    calculateInstallmentAmount(1000, 10);
+                }
+                const calcEnd = performance.now();
+                const calcTime = calcEnd - calcStart;
+
+                addResult('performanceTests', 'Calculation performance', calcTime < 50,
+                    `1000 calculations in ${calcTime.toFixed(2)}ms`);
+                log(`Calculation performance: ${calcTime.toFixed(2)}ms for 1000 iterations`,
+                    calcTime < 50 ? 'info' : 'warn');
+
+                // Test validation performance
+                const { validateEmail } = await import('../js/validation.js');
+                const valStart = performance.now();
+                for (let i = 0; i < 1000; i++) {
+                    validateEmail('test@example.com');
+                }
+                const valEnd = performance.now();
+                const valTime = valEnd - valStart;
+
+                addResult('performanceTests', 'Validation performance', valTime < 50,
+                    `1000 validations in ${valTime.toFixed(2)}ms`);
+                log(`Validation performance: ${valTime.toFixed(2)}ms for 1000 iterations`,
+                    valTime < 50 ? 'info' : 'warn');
+
+            } catch (e) {
+                addResult('performanceTests', 'Performance tests', false, e.message);
+                log('❌ Performance test failed: ' + e.message, 'error');
+            }
+        }
+
+        async function runAllTests() {
+            log('=== Starting Integration Test Suite ===', 'info');
+
+            // Clear previous results
+            results.moduleTests = [];
+            results.functionalityTests = [];
+            results.fileTests = [];
+            results.performanceTests = [];
+
+            await testModuleLoading();
+            await testFunctionality();
+            await testFileStructure();
+            await testPerformance();
+
+            log('=== Test Suite Complete ===', 'info');
+
+            const total = Object.values(results).reduce((sum, arr) => sum + arr.length, 0);
+            const passed = Object.values(results).reduce((sum, arr) =>
+                sum + arr.filter(r => r.passed).length, 0);
+
+            log(`Final Results: ${passed}/${total} tests passed`, passed === total ? 'info' : 'error');
+        }
+
+        window.runAllTests = runAllTests;
+
+        // Auto-run tests on load
+        window.addEventListener('load', () => {
+            setTimeout(runAllTests, 1000);
+        });
+    </script>
+</body>
+</html>

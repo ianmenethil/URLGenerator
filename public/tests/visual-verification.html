@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Verification - ZenPay Form</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .checklist {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .checklist h2 {
+            color: #4a90e2;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #4a90e2;
+            padding-bottom: 10px;
+        }
+        .check-item {
+            padding: 10px;
+            margin: 5px 0;
+            border-left: 4px solid #ddd;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .check-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        .check-item.checked {
+            border-left-color: #28a745;
+            background: #d4edda;
+        }
+        .iframe-wrapper {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        iframe {
+            width: 100%;
+            height: 900px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+        }
+        .test-instructions {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .test-instructions h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        .test-instructions ol {
+            margin-left: 20px;
+        }
+        .test-instructions li {
+            margin: 5px 0;
+            color: #856404;
+        }
+        .status-bar {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .status-bar .progress {
+            flex: 1;
+            margin: 0 20px;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e9ecef;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745, #20c997);
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        button {
+            background: #4a90e2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #3a7cc0;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 1200px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✅ Visual Verification Checklist - ZenPay Form</h1>
+
+        <div class="test-instructions">
+            <h3>📋 Testing Instructions</h3>
+            <ol>
+                <li>Check each item as you verify it works correctly in the form below</li>
+                <li>Interact with the form to test all functionality</li>
+                <li>Use browser DevTools to check for console errors (F12)</li>
+                <li>Test on different screen sizes using DevTools responsive mode</li>
+                <li>Verify accessibility using screen reader or accessibility tools</li>
+            </ol>
+        </div>
+
+        <div class="status-bar">
+            <div><strong>Progress:</strong></div>
+            <div class="progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill">0%</div>
+                </div>
+            </div>
+            <div id="progress-text"><strong>0 / 40 Complete</strong></div>
+        </div>
+
+        <div class="grid-2">
+            <!-- Visual Checks -->
+            <div class="checklist">
+                <h2>👁️ Visual Appearance</h2>
+                <div class="check-item">
+                    <input type="checkbox" id="check1" onchange="updateProgress()">
+                    <label for="check1">Form loads without errors</label>
+                </div>
+                <div class="check-item">
+                    <input type="checkbox" id="check2" onchange="updateProgress()">
+                    <label for="check2">All CSS styles are applied correctly</label>
+                </div>
+                <div class="check-item">
+                    <input type="checkbox" id="check3" onchange="updateProgress()">
+                    <label for="check3">Floating labels work on focus/input</label>
+                </div>
+                <div class="check-item">
+                    <input type="checkbox" id="check4" onchange="updateProgress()">
+                    <label for="check4">Form sections are properly spaced</label>
+                </div>
+                <div class="check-item">
+                    <input type="checkbox" id="check5" onchange="updateProgress()">
+                    <label for="check5">Buttons have hover effects</label>
+                </div>
+                <div class="check-item">
+                    <input type="checkbox" id="check6" onchange="updateProgress()">
+                    <label for="check6">Colors and contrast look good</label>
+                </div>
+                <div class="check-item">
+                    <input type="checkbox" id="check7" onchange="updateProgress()">
+                    <label for="check7">Icons (emojis) display correctly</label>
+                </div>
+                <div class="check-item">
+                    <input type="checkbox" id="check8" onchange="updateProgress()">
+                    <label for="check8">Responsive on mobile (DevTools)</label>
+                </div>
+            </div>
+
+            <!-- Functionality Checks -->
+            <div class="checklist">
+                <h2>⚙️ Core Functionality</h2>
+                <div class="check-item">
+                    <input type="checkbox" id="check9" onchange="updateProgress()">
+                    <label for="check9">All form fields are editable</label>
+                </div>
+                <div class="check-item">
+                    <input type="checkbox" id="check10" onchange="updateProgress()">
+                    <label for="check10">Date field defaults to today</label>
+                </div>
+                <div class="check-item">
+                    <input type="checkbox" id="check11" onchange="updateProgress()">
+                    <label for="check11">Installment amount calculates correctly</label>
+                </div>
+                <div class="check-item">
+                    <input type="checkbox" id="check12" onchange="updateProgress()">
+                    <label for="check12">End date calculates for Monthly</label>
+                </div>
+                <div class="check-item">
+                    <input type="checkbox" id="check13" onchange="updateProgress()">
+                    <label for="check13">End date calculates for Weekly</label>
+                </div>
+                <div class="check-item">
+                    <input type="checkbox" id="check14" onchange="updateProgress()">
+                    <label for="check14">End date calculates for Fortnightly</label>
+                </div>
+                <div class="check-item">
+                    <input type="checkbox" id="check15" onchange="updateProgress()">
+                    <label for="check15">URL generates in real-time</label>
+                </div>
+                <div class="check-item">
+                    <input type="checkbox" id="check16" onchange="updateProgress()">
+                    <label for="check16">URL truncates if too long</label>
+                </div>
+            </div>
+
+            <!-- Validation Checks -->
+            <div class="checklist">
+                <h2>✔️ Validation</h2>
+                <div class="check-item">
+                    <input type="checkbox" id="check17" onchange="updateProgress()">
+                    <label for="check17">Email validation works</label>
+                </div>
+                <div class="check-item">
+                    <input type="checkbox" id="check18" onchange="updateProgress()">
+                    <label for="check18">Invalid email shows error</label>
+                </div>
+                <div class="check-item">
+                    <input type="checkbox" id="check19" onchange="updateProgress()">
+                    <label for="check19">Postcode only accepts numbers</label>
+                </div>
+                <div class="check-item">
+                    <input type="checkbox" id="check20" onchange="updateProgress()">
+                    <label for="check20">Mobile only accepts numbers</label>
+                </div>
+                <div class="check-item">
+                    <input type="checkbox" id="check21" onchange="updateProgress()">
+                    <label for="check21">Required fields are marked</label>
+                </div>
+                <div class="check-item">
+                    <input type="checkbox" id="check22" onchange="updateProgress()">
+                    <label for="check22">Disabled fields can't be edited</label>
+                </div>
+            </div>
+
+            <!-- Button Functionality -->
+            <div class="checklist">
+                <h2>🔘 Button Functions</h2>
+                <div class="check-item">
+                    <input type="checkbox" id="check23" onchange="updateProgress()">
+                    <label for="check23">Open button opens URL in new tab</label>
+                </div>
+                <div class="check-item">
+                    <input type="checkbox" id="check24" onchange="updateProgress()">
+                    <label for="check24">Copy URL button works</label>
+                </div>
+                <div class="check-item">
+                    <input type="checkbox" id="check25" onchange="updateProgress()">
+                    <label for="check25">Copy shows success tooltip</label>
+                </div>
+                <div class="check-item">
+                    <input type="checkbox" id="check26" onchange="updateProgress()">
+                    <label for="check26">Email button opens email client</label>
+                </div>
+                <div class="check-item">
+                    <input type="checkbox" id="check27" onchange="updateProgress()">
+                    <label for="check27">Reset button clears all fields</label>
+                </div>
+                <div class="check-item">
+                    <input type="checkbox" id="check28" onchange="updateProgress()">
+                    <label for="check28">Download button works</label>
+                </div>
+            </div>
+
+            <!-- Storage & Persistence -->
+            <div class="checklist">
+                <h2>💾 Storage & Persistence</h2>
+                <div class="check-item">
+                    <input type="checkbox" id="check29" onchange="updateProgress()">
+                    <label for="check29">Merchant code persists on reload</label>
+                </div>
+                <div class="check-item">
+                    <input type="checkbox" id="check30" onchange="updateProgress()">
+                    <label for="check30">Ctrl+Alt+Shift+C clears storage</label>
+                </div>
+                <div class="check-item">
+                    <input type="checkbox" id="check31" onchange="updateProgress()">
+                    <label for="check31">No console errors on load</label>
+                </div>
+                <div class="check-item">
+                    <input type="checkbox" id="check32" onchange="updateProgress()">
+                    <label for="check32">No console errors during use</label>
+                </div>
+            </div>
+
+            <!-- Accessibility -->
+            <div class="checklist">
+                <h2>♿ Accessibility</h2>
+                <div class="check-item">
+                    <input type="checkbox" id="check33" onchange="updateProgress()">
+                    <label for="check33">Tab key navigation works</label>
+                </div>
+                <div class="check-item">
+                    <input type="checkbox" id="check34" onchange="updateProgress()">
+                    <label for="check34">Enter key submits/actions</label>
+                </div>
+                <div class="check-item">
+                    <input type="checkbox" id="check35" onchange="updateProgress()">
+                    <label for="check35">Focus indicators visible</label>
+                </div>
+                <div class="check-item">
+                    <input type="checkbox" id="check36" onchange="updateProgress()">
+                    <label for="check36">Skip link works (Tab first)</label>
+                </div>
+                <div class="check-item">
+                    <input type="checkbox" id="check37" onchange="updateProgress()">
+                    <label for="check37">Screen reader compatible</label>
+                </div>
+                <div class="check-item">
+                    <input type="checkbox" id="check38" onchange="updateProgress()">
+                    <label for="check38">Error messages announced</label>
+                </div>
+                <div class="check-item">
+                    <input type="checkbox" id="check39" onchange="updateProgress()">
+                    <label for="check39">All buttons have labels</label>
+                </div>
+                <div class="check-item">
+                    <input type="checkbox" id="check40" onchange="updateProgress()">
+                    <label for="check40">Tooltip shows full URL on hover</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="iframe-wrapper">
+            <h2 style="margin-bottom: 15px;">📱 Live Form</h2>
+            <iframe src="../index.html" title="ZenPay Payment Form"></iframe>
+        </div>
+    </div>
+
+    <script>
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const checked = document.querySelectorAll('input[type="checkbox"]:checked');
+            const percentage = Math.round((checked.length / checkboxes.length) * 100);
+
+            document.getElementById('progress-fill').style.width = percentage + '%';
+            document.getElementById('progress-fill').textContent = percentage + '%';
+            document.getElementById('progress-text').innerHTML =
+                `<strong>${checked.length} / ${checkboxes.length} Complete</strong>`;
+
+            // Update check-item styling
+            checkboxes.forEach(cb => {
+                const item = cb.closest('.check-item');
+                if (cb.checked) {
+                    item.classList.add('checked');
+                } else {
+                    item.classList.remove('checked');
+                }
+            });
+
+            // Celebrate if all done
+            if (checked.length === checkboxes.length) {
+                setTimeout(() => {
+                    alert('🎉 Congratulations! All verification checks complete!');
+                }, 300);
+            }
+        }
+
+        // Load saved state from localStorage
+        window.addEventListener('load', () => {
+            const saved = localStorage.getItem('verificationState');
+            if (saved) {
+                const state = JSON.parse(saved);
+                state.forEach((checked, index) => {
+                    const checkbox = document.getElementById(`check${index + 1}`);
+                    if (checkbox) {
+                        checkbox.checked = checked;
+                    }
+                });
+                updateProgress();
+            }
+        });
+
+        // Save state on change
+        document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+            cb.addEventListener('change', () => {
+                const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+                const state = Array.from(checkboxes).map(cb => cb.checked);
+                localStorage.setItem('verificationState', JSON.stringify(state));
+            });
+        });
+    </script>
+</body>
+</html>
